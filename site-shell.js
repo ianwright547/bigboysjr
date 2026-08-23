@@ -1,0 +1,14 @@
+(function () {
+  const script = document.currentScript;
+  const root = script?.dataset.root || '';
+  const main = document.querySelector('main');
+  if (!main) return;
+
+  if (!document.querySelector('.nav-wrap')) {
+    main.insertAdjacentHTML('beforebegin', `<div class="topbar"><div class="inner"><span>Atlanta &amp; Suwanee Junk Removal</span><a href="tel:+14706606874">(470) 660-6874</a></div></div><div class="nav-wrap"><nav class="nav"><a class="brand-logo text-logo" href="${root}index.html" aria-label="Big Boys Junk Removal home">BIG <span>BOYS</span><small>JUNK REMOVAL</small></a><ul class="nav-links"><li><a href="${root}index.html">Home</a></li><li><a href="${root}services/index.html">Services</a></li><li><a href="${root}service-areas/index.html">Service Areas</a></li><li><a href="${root}blog/index.html">Blog</a></li><li><a href="${root}contact.html">Contact</a></li></ul><div class="nav-actions"><a class="nav-call" href="tel:+14706606874">Call Now</a><a class="nav-cta" href="${root}get-a-price-quote.html">Get a Price Quote</a></div></nav></div>`);
+  }
+
+  if (!document.querySelector('.footer')) {
+    main.insertAdjacentHTML('afterend', `<footer class="footer"><div class="footer-inner"><div class="footer-grid"><div class="footer-brand"><span class="fname">BIG <span>BOYS</span><br>JUNK REMOVAL</span><p>Upfront junk-removal pricing for Atlanta, Suwanee, and surrounding communities.</p><a class="footer-call" href="tel:+14706606874">Call (470) 660-6874</a></div><div class="footer-col"><h4>Explore</h4><ul><li><a href="${root}services/index.html">Services</a></li><li><a href="${root}service-areas/index.html">Service Areas</a></li><li><a href="${root}blog/index.html">Guides</a></li><li><a href="${root}about.html">About</a></li></ul></div><div class="footer-col"><h4>Locations</h4><ul><li><a href="${root}atlanta/">Atlanta</a></li><li><a href="${root}suwanee/">Suwanee</a></li><li><a href="${root}marietta/">Marietta</a></li><li><a href="${root}buford/">Buford</a></li></ul></div><div class="footer-col"><h4>Contact</h4><div class="footer-card"><div class="l1">Big Boys Junk Removal</div><div class="l2">(470) 660-6874<br>support@bigboysjr.com</div></div></div></div><div class="footer-bottom"><span>© 2026 Big Boys Junk Removal.</span><div class="links"><a href="${root}privacy-policy.html">Privacy</a><a href="${root}terms-of-service.html">Terms</a></div></div></div></footer>`);
+  }
+})();

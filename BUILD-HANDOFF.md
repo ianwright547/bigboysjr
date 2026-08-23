@@ -23,11 +23,10 @@
 
 ## Production steps required
 
-1. Configure the platform to serve folder routes without `.html` and apply every 301 in `redirects.csv`.
-2. Connect `quote.js` to an approved lead/scheduling integration. The current confirmation step intentionally does **not** transmit customer data.
+1. Publish the static files and folder-based city routes as committed. Apply the optional canonical redirects in `redirects.csv` if the host supports redirect imports.
+2. Optionally connect `quote.js` to an approved CRM or scheduling endpoint. Until then, the final step prepares a customer-controlled email request and provides a direct call action; no information is silently transmitted.
 3. Confirm published claims, review source/rating, business address display, service coverage, and current pricing before launch.
-4. Delete or redirect the legacy SeaBee-only files that are not in the sitemap before the domain switch; they are intentionally not part of the new Big Boys route architecture.
-   See `LEGACY-ROUTE-AUDIT.md` for the exact inventory and recommended handling.
+4. Legacy SeaBee HTML and markdown routes have been removed from the deployable tree. If those URLs had historical traffic, configure 410 responses or intentional redirects at the host.
 
 ## Known audit boundaries
 

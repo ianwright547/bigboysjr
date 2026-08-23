@@ -1,4 +1,9 @@
 old_path,new_path,status
+/get-a-price-quote,/get-a-price-quote.html,301
+/about,/about.html,301
+/contact,/contact.html,301
+/privacy-policy,/privacy-policy.html,301
+/terms-of-service,/terms-of-service.html,301
 /atlanta,/atlanta/,301
 /suwanee,/suwanee/,301
 /marietta,/marietta/,301

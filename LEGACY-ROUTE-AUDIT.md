@@ -2,9 +2,13 @@
 
 The following files are legacy SeaBee Jack's content. They are not linked from the Big Boys navigation and are excluded from `sitemap.xml`, but a static host will still serve them if they remain deployed.
 
-## Required launch action
+## Completed repository action
 
-Before switching the production domain, configure the host to return a 301 to the relevant Big Boys route or a 410 for every legacy route below. Do **not** publish these pages under the Big Boys domain.
+The legacy SeaBee HTML and markdown files listed below were removed from the deployable repository on August 23, 2026. They can no longer surface as mixed-brand pages from a static deployment of this tree.
+
+## Optional host action
+
+If these URLs previously received search traffic, configure the host to return a relevant 301 or a 410. Do **not** recreate or publish the old pages under the Big Boys domain.
 
 ### Legacy services → Big Boys services
 
