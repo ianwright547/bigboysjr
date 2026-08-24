@@ -34,7 +34,9 @@
       item.classList.toggle('complete', index < step);
     });
     progress.style.width = `${(step + 1) * 20}%`;
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    window.scrollTo({top: 0, left: 0, behavior: 'auto'});
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   };
   const actions = (back, next, disabled = false, nextText = 'Continue') => `<div class="quote-actions"><button class="quote-btn secondary" type="button" data-back>${back}</button><button class="quote-btn primary" type="button" data-next ${disabled ? 'disabled' : ''}>${nextText}</button></div>`;
   const support = () => `<aside class="quote-support"><div><strong>Not sure what to choose?</strong><span>Talk through a large, heavy, or unusual job with the team</span></div><a href="tel:+14706606874">Call (470) 660-6874</a></aside>`;
@@ -45,14 +47,15 @@
       <div class="quote-choice-grid">
         <button type="button" data-method="item"><span class="choice-number">01</span><strong>Price by item</strong><p>Best when you know the furniture, appliances, or other pieces that need to go</p><small>Build a detailed item list</small></button>
         <button type="button" data-method="load"><span class="choice-number">02</span><strong>Price by load size</strong><p>Best for mixed piles, garage cleanouts, estate cleanouts, and larger projects</p><small>Estimate trailer space</small></button>
-      </div>${actions('Back to home', 'Continue', true)}${support()}</section>`;
+      </div><a class="quote-home-link" href="index.html">Back to home</a>${support()}</section>`;
     let selected = state.method;
     if (selected) app.querySelector(`[data-method="${selected}"]`)?.classList.add('selected');
     app.querySelector('[data-back]').onclick = () => location.href = 'index.html';
     app.querySelectorAll('[data-method]').forEach(button => button.onclick = () => {
       selected = button.dataset.method;
+      state.method = selected;
       app.querySelectorAll('[data-method]').forEach(item => item.classList.toggle('selected', item === button));
-      app.querySelector('[data-next]').disabled = false;
+      window.setTimeout(() => selected === 'item' ? itemScreen() : loadScreen(), 80);
     });
     app.querySelector('[data-next]').onclick = () => {
       state.method = selected;
