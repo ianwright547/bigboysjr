@@ -14,7 +14,9 @@ window.BIG_BOYS = {
   posts: [
     ['Junk Removal Tips','How Much Does Junk Removal Cost in Atlanta?','A straightforward look at item and load pricing for Metro Atlanta.','blog/how-much-does-junk-removal-cost-atlanta.html'],
     ['Planning a Cleanout','Same-Day Junk Removal vs. Dumpster Rental','Compare speed, convenience, and project fit before you decide.','blog/same-day-junk-removal-vs-dumpster-rental.html'],
-    ['Disposal & Recycling','What Items Can Be Recycled or Removed?','A practical guide to common items and responsible disposal.','blog/what-items-can-be-recycled-or-removed.html']
+    ['Disposal & Recycling','What Items Can Be Recycled or Removed?','A practical guide to common items and responsible disposal.','blog/what-items-can-be-recycled-or-removed.html'],
+    ['Pickup Prep','How to Prepare for a Junk Removal Pickup','Five simple steps that make pickup day smoother.','blog/how-to-prepare-for-junk-removal.html'],
+    ['Estate Cleanouts','A Calm, Practical Estate Cleanout Checklist','A thoughtful way to plan a larger household clear-out.','blog/estate-cleanout-checklist.html']
   ],
   reviews: [
     ['Heather Dobbs','Excellent service, great guys! Helped me out big time!'],
