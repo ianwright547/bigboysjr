@@ -1,6 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
   const nav = document.getElementById('nav');
   if (nav) addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 12), {passive:true});
+  const navMenus = document.querySelectorAll('.nav-menu details');
+  navMenus.forEach(menu => menu.addEventListener('toggle', () => {
+    if (menu.open) navMenus.forEach(other => { if (other !== menu) other.open = false; });
+  }));
+  document.addEventListener('click', event => {
+    if (!event.target.closest('.nav-menu')) navMenus.forEach(menu => { menu.open = false; });
+  });
+  const compare = document.querySelector('.compare');
+  const compareInput = compare?.querySelector('input[type="range"]');
+  compareInput?.addEventListener('input', () => compare.style.setProperty('--position', `${compareInput.value}%`));
+  const areaSelect = document.getElementById('homeAreaSelect');
+  document.getElementById('homeAreaGo')?.addEventListener('click', () => {
+    if (areaSelect?.value) location.href = areaSelect.value;
+    else areaSelect?.focus();
+  });
   const faqList = document.getElementById('faqList');
   if (faqList) {
     const extraFaqs = [
