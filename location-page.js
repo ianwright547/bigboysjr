@@ -5,7 +5,9 @@
   };
   const location = locations[document.body.dataset.location];
   if (!location) return;
-  document.title = `Junk Removal in ${location.name} GA | Big Boys Junk Removal`;
+  document.title = `Junk Removal in ${location.name}, GA | Big Boys Junk Removal`;
+  const locationTitle = document.querySelector('.subhero h1');
+  if (locationTitle) locationTitle.textContent = `Junk Removal in ${location.name}`;
   document.getElementById('locationName').textContent = location.name;
   document.getElementById('locationAddress').textContent = location.address;
   const meta = document.createElement('meta'); meta.name = 'keywords'; meta.content = `junk removal ${location.name}, same-day junk removal ${location.name}, furniture removal ${location.name}, garage cleanout ${location.name}, appliance pickup Metro Atlanta`; document.head.append(meta);
