@@ -50,17 +50,12 @@
       </div><a class="quote-home-link" href="index.html">Back to home</a>${support()}</section>`;
     let selected = state.method;
     if (selected) app.querySelector(`[data-method="${selected}"]`)?.classList.add('selected');
-    app.querySelector('[data-back]').onclick = () => location.href = 'index.html';
     app.querySelectorAll('[data-method]').forEach(button => button.onclick = () => {
       selected = button.dataset.method;
       state.method = selected;
       app.querySelectorAll('[data-method]').forEach(item => item.classList.toggle('selected', item === button));
       window.setTimeout(() => selected === 'item' ? itemScreen() : loadScreen(), 80);
     });
-    app.querySelector('[data-next]').onclick = () => {
-      state.method = selected;
-      selected === 'item' ? itemScreen() : loadScreen();
-    };
   }
 
   function itemScreen() {
