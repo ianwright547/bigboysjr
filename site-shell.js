@@ -4,7 +4,7 @@
   const main = document.querySelector('main');
   if (!main) return;
 
-  const navMarkup = `<a class="brand-logo" href="${root}index.html" aria-label="Big Boys Junk Removal home"><img src="${root}photos/big-boys-mark.png" alt="" width="64" height="52"><span><strong>Big Boys</strong><small>Junk Removal</small></span></a>
+  const navMarkup = `<a class="brand-logo" href="${root}index.html" aria-label="Big Boys Junk Removal home"><img src="${root}photos/big-boys-mark.png" alt="Big Boys Junk Removal logo" width="64" height="52"><span><strong>Big Boys</strong><small>Junk Removal</small></span></a>
     <ul class="nav-links">
       <li><a href="${root}index.html">Home</a></li>
       <li class="nav-menu"><details><summary>Services <span aria-hidden="true">+</span></summary><div class="nav-dropdown"><a href="${root}services/index.html"><strong>All Services</strong><small>Explore everything we haul</small></a><a href="${root}services/junk-removal.html">General junk removal</a><a href="${root}services/furniture-removal.html">Furniture removal</a><a href="${root}services/appliance-removal.html">Appliance removal</a><a href="${root}services/mattress-removal.html">Mattress removal</a><a href="${root}services/cleanouts.html">Home and estate cleanouts</a><a href="${root}services/yard-waste-removal.html">Yard waste removal</a><a href="${root}services/construction-debris.html">Construction debris</a><a href="${root}services/commercial-junk-removal.html">Commercial junk removal</a></div></details></li>
