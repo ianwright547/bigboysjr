@@ -1028,6 +1028,39 @@ body{background:#fff;color:var(--ink)}
 .clean-booking-form{display:grid;grid-template-columns:1fr 1fr;gap:15px}.clean-booking-form>label{display:grid;gap:7px;color:#2b3832;font-size:12px;font-weight:850}.clean-booking-form label small{color:#7b8780;font-weight:600}.clean-booking-form input,.clean-booking-form textarea{width:100%;padding:14px;border:1px solid #d1ddd6;border-radius:11px;background:#fff;font:inherit;outline:none}.clean-booking-form input:focus,.clean-booking-form textarea:focus{border-color:#23885c;box-shadow:0 0 0 4px rgba(35,136,92,.1)}.clean-booking-form .wide,.clean-booking-form fieldset,.request-summary{grid-column:1/-1}.clean-booking-form fieldset{padding:0;border:0}.clean-booking-form legend{margin-bottom:8px;font-size:12px;font-weight:850}.clean-time-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.clean-time-slots label{position:relative}.clean-time-slots input{position:absolute;opacity:0;pointer-events:none}.clean-time-slots span{display:grid;padding:13px;border:1px solid #d4dfd8;border-radius:11px;text-align:center;cursor:pointer}.clean-time-slots input:checked+span{border-color:#23885c;background:#eaf5ef;color:#176a46}.clean-time-slots small{margin-top:3px}.request-summary{display:flex;align-items:center;justify-content:space-between;padding:16px;border-radius:12px;background:#eaf5ef}.request-summary strong{color:#176a46;font-size:1.45rem}.confirmation-screen{max-width:700px;margin:auto;text-align:center}.confirmation-mark{display:grid;place-items:center;width:74px;height:74px;margin:0 auto 22px;border-radius:50%;background:#23885c;color:#fff;font-weight:900}.confirmation-screen h1{font-size:clamp(2.2rem,5vw,4rem)}.confirmation-screen p{max-width:570px;margin:16px auto;color:#68756e;line-height:1.65}.confirmation-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}.text-button{margin-top:16px;border:0;background:transparent;color:#176a46;font-weight:800;cursor:pointer}
 @media(max-width:720px){.quote-workspace{padding:22px 12px 60px}.quote-intro{display:none}.quote-steps span{font-size:9px}.quote-steps b{width:34px;height:34px}.quote-steps li::after{top:16px}.quote-screen{padding:24px 16px;border-radius:18px}.quote-screen>header{text-align:left}.quote-choice-grid,.clean-item-grid,.clean-booking-form,.confirmation-actions{grid-template-columns:1fr}.clean-load-grid{grid-template-columns:repeat(2,1fr)}.quote-actions{grid-template-columns:1fr}.quote-support{display:grid}.load-summary{display:grid;text-align:center}.detail-stack article,.detail-stack>label{padding:15px}.clean-time-slots{grid-template-columns:1fr}.clean-booking-form .wide,.clean-booking-form fieldset,.request-summary{grid-column:1}.estimate-total strong{font-size:3.2rem}}
 
+/* Mobile quote and navigation hardening */
+html,body{overflow-x:hidden}
+.clean-booking-form fieldset{min-width:0}
+.clean-booking-form input,.clean-booking-form textarea,.clean-booking-form select{box-sizing:border-box;max-width:100%}
+.detail-stack article>div:first-child,.detail-stack>label>div{min-width:0}
+.quote-screen{min-width:0}
+@media(max-width:760px){
+  .nav-links>.nav-menu{position:static;min-width:0}
+  .nav-menu details{position:static}
+  .nav-menu summary{min-height:40px}
+  .nav-menu details[open]>.nav-dropdown{position:fixed;top:124px;left:12px;right:12px;width:auto;max-height:calc(100dvh - 140px);overflow-y:auto;overscroll-behavior:contain;padding:10px;z-index:1000;border-radius:14px;box-shadow:0 18px 50px rgba(15,47,34,.24)}
+  .nav-menu:last-of-type details[open]>.nav-dropdown{left:12px;right:12px}
+  .nav-dropdown a{padding:12px 13px;font-size:14px}
+  .quote-workspace{width:100%;box-sizing:border-box;padding:18px 10px 54px}
+  .quote-screen{padding:22px 14px}
+  .quote-screen>header h1{font-size:clamp(1.8rem,8.8vw,2.55rem);line-height:1.04}
+  .quote-screen>header p{font-size:.95rem;line-height:1.5}
+  .quote-steps{gap:0}
+  .quote-steps li{min-width:0;font-size:10px}
+  .quote-steps span{white-space:nowrap}
+  .quote-actions{gap:10px}
+  .quote-btn{min-height:52px;padding:12px 13px}
+  .method-card{min-width:0}
+  .clean-item-grid,.clean-load-grid{gap:9px}
+  .clean-item-grid article{min-width:0;padding:13px 10px}
+  .clean-item-grid article>strong{font-size:13px;overflow-wrap:anywhere}
+  .clean-stepper{grid-template-columns:30px 26px 30px}
+  .clean-stepper button{width:30px;height:30px}
+  .clean-booking-form{gap:13px}
+  .clean-booking-form input,.clean-booking-form textarea{font-size:16px;padding:13px}
+  .request-summary{gap:10px;flex-wrap:wrap}
+}
+
 /* Expanded service and service-area pages */
 .service-overview{background:#fff}.service-overview .split-proof{align-items:start}.service-overview h2{margin:14px 0}.service-overview p{margin:0 0 15px;color:#59675f;line-height:1.75}.service-overview ul{display:grid;gap:8px;margin-top:20px;padding-left:20px;color:#405047}.service-overview figure{position:sticky;top:110px}.service-overview figure img{height:520px}
 .area-finder{max-width:760px;margin:0 auto;padding:28px;border:1px solid #d5e2da;border-radius:20px;background:#f6faf7;box-shadow:0 18px 48px rgba(20,72,49,.08)}.area-finder>label{display:block;margin-bottom:10px;color:#26332d;font-weight:850}.area-finder>div{display:grid;grid-template-columns:1fr auto;gap:10px}.area-finder select{min-height:54px;padding:0 14px;border:1px solid #cbdad1;border-radius:12px;background:#fff;color:#2c3832;font:inherit}.area-finder small{display:block;margin-top:10px;color:#718078}.service-area-groups{display:grid;gap:13px;max-width:980px;margin:auto}.service-area-groups details{overflow:hidden;border:1px solid #d5e2da;border-radius:16px;background:#fff}.service-area-groups summary{padding:20px 22px;color:#21342a;font-size:1.1rem;font-weight:850;cursor:pointer}.service-area-groups details[open] summary{background:#eaf5ef;color:#176a46}.service-area-groups details>div{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}.service-area-groups a{padding:13px 14px;border-radius:10px;background:#f6f9f7;color:#46534c;font-weight:760}.service-area-groups a:hover{background:#23885c;color:#fff}
