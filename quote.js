@@ -34,9 +34,14 @@
       item.classList.toggle('complete', index < step);
     });
     progress.style.width = `${(step + 1) * 20}%`;
-    window.scrollTo({top: 0, left: 0, behavior: 'auto'});
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+    // Keep the sticky site navigation in place and bring the new quote step
+    // into view. Scrolling the document itself to 0 can hide the form under
+    // the header on mobile and feels like the page has unexpectedly reset.
+    const workspace = document.querySelector('.quote-workspace');
+    if (workspace) {
+      const top = Math.max(0, workspace.getBoundingClientRect().top + window.scrollY - 12);
+      window.scrollTo({top, left: 0, behavior: 'smooth'});
+    }
   };
   const actions = (back, next, disabled = false, nextText = 'Continue') => `<div class="quote-actions"><button class="quote-btn secondary" type="button" data-back>${back}</button><button class="quote-btn primary" type="button" data-next ${disabled ? 'disabled' : ''}>${nextText}</button></div>`;
   const support = () => `<aside class="quote-support"><div><strong>Not sure what to choose?</strong><span>Talk through a large, heavy, or unusual job with the team</span></div><a href="tel:+14706606874">Call (470) 660-6874</a></aside>`;
