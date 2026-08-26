@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Seo from "@/components/Seo";
+import { getProjectsForPath } from "@/data/jobPhotos";
 
 export interface GuideSection {
   heading: string;
@@ -24,12 +25,13 @@ export interface GuideArticleData {
 }
 
 const GuideArticle = ({ data }: { data: GuideArticleData }) => {
+  const project = getProjectsForPath(data.path, 1)[0];
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: data.title,
     description: data.description,
-    image: "https://bigboysjr.com/social-preview.png",
+    image: `https://bigboysjr.com${project.before}`,
     datePublished: data.datePublished,
     dateModified: data.datePublished,
     author: { "@type": "Organization", name: "Big Boys Junk Removal" },
@@ -76,6 +78,20 @@ const GuideArticle = ({ data }: { data: GuideArticleData }) => {
         <p className="text-sm text-muted-foreground">Updated {data.dateLabel} • {data.readTime}</p>
         <p className="text-lg text-muted-foreground leading-relaxed">{data.intro}</p>
 
+        <figure className="not-prose my-10 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+          <div className="grid sm:grid-cols-2">
+            <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+              <img src={project.before} alt={project.beforeAlt} width={720} height={540} loading="eager" decoding="async" className="h-full w-full object-cover" />
+              <span className="absolute left-3 top-3 rounded-full bg-foreground/85 px-3 py-1 text-xs font-bold text-background">Before</span>
+            </div>
+            <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+              <img src={project.after} alt={project.afterAlt} width={720} height={540} loading="lazy" decoding="async" className="h-full w-full object-cover" />
+              <span className="absolute right-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">After</span>
+            </div>
+          </div>
+          <figcaption className="p-5 text-sm text-muted-foreground"><strong className="text-foreground">Real Big Boys project:</strong> {project.description}</figcaption>
+        </figure>
+
         {data.sections.map((section) => (
           <section key={section.heading}>
             <h2 className="text-2xl font-bold text-foreground mt-10">{section.heading}</h2>
@@ -87,6 +103,13 @@ const GuideArticle = ({ data }: { data: GuideArticleData }) => {
             )}
           </section>
         ))}
+
+        <section>
+          <h2 className="text-2xl font-bold text-foreground mt-10">Turn the Plan Into a Smooth Pickup</h2>
+          <p className="text-muted-foreground leading-relaxed">Once you know what should go, the next step is matching the job to the right pricing method. Item pricing works best for a short, specific list. Load-size pricing is usually easier for mixed piles, several rooms, or projects where the exact count is difficult to estimate.</p>
+          <p className="text-muted-foreground leading-relaxed">Before booking, note stairs, elevators, tight hallways, long carries, gates, parking limits, heavy material, and anything that may need disassembly. Those details help the crew bring the right equipment and reserve enough time.</p>
+          <p className="text-muted-foreground leading-relaxed">On pickup day, separate valuables and documents, confirm the removal list with the crew, and keep pets or children away from the loading path. You do not need to drag heavy items outside unless you prefer a curbside pickup.</p>
+        </section>
 
         <section>
           <h2 className="text-2xl font-bold text-foreground mt-10">Frequently Asked Questions</h2>

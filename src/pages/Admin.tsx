@@ -4,13 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Phone, Search, RefreshCw, Calendar, MapPin, Package, DollarSign, Lock, LogOut, Mail, Clock, Wrench, FileText, ChevronDown, BarChart3, ClipboardList, Trash2, RotateCcw, Map, CheckCircle2, XCircle, Pencil, Activity, Plus } from "lucide-react";
-// Lazy-load heavy admin panels so Leaflet (maps) + analytics charts never ship in the public/home bundle CSS graph.
-const AnalyticsPanel = lazy(() => import("@/components/admin/AnalyticsPanel").then(m => ({ default: m.AnalyticsPanel })));
+import { Phone, Search, RefreshCw, Calendar, MapPin, Package, DollarSign, Lock, LogOut, Mail, Clock, Wrench, FileText, ChevronDown, ClipboardList, Trash2, RotateCcw, Map, CheckCircle2, XCircle, Pencil, Plus } from "lucide-react";
 const LeadsMap = lazy(() => import("@/components/admin/LeadsMap").then(m => ({ default: m.LeadsMap })));
 const EditLeadModal = lazy(() => import("@/components/admin/EditLeadModal"));
 const CatalogManager = lazy(() => import("@/components/admin/CatalogManager"));
-const WebVitalsPanel = lazy(() => import("@/components/admin/WebVitalsPanel"));
 const SeoBulkEditor = lazy(() => import("@/components/admin/SeoBulkEditor"));
 
 import { format } from "date-fns";
@@ -139,7 +136,7 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"leads" | "completed" | "analytics" | "trash" | "catalog" | "vitals" | "pageseo">("leads");
+  const [activeTab, setActiveTab] = useState<"leads" | "completed" | "trash" | "catalog" | "pageseo">("leads");
   const [showMap, setShowMap] = useState(true);
   const [mapFilter, setMapFilter] = useState<"all" | "New" | "Contacted" | "Booked" | "Completed">("all");
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
@@ -540,7 +537,7 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
             <Button onClick={() => setCreatingOrder(true)} size="sm" className="rounded-xl">
               <Plus className="w-4 h-4 mr-2" /> New Order
             </Button>
-            {activeTab !== "analytics" && activeTab !== "catalog" && activeTab !== "pageseo" && (
+            {activeTab !== "catalog" && activeTab !== "pageseo" && (
               <Button onClick={fetchLeads} variant="outline" size="sm" disabled={loading} className="rounded-xl">
                 <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} /> Refresh
               </Button>
@@ -578,28 +575,12 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
             <Trash2 className="w-4 h-4" /> Trash {stats.trashed > 0 && <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{stats.trashed}</Badge>}
           </button>
           <button
-            onClick={() => setActiveTab("analytics")}
-            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap ${
-              activeTab === "analytics" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <BarChart3 className="w-4 h-4" /> Analytics
-          </button>
-          <button
             onClick={() => setActiveTab("catalog")}
             className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap ${
               activeTab === "catalog" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Package className="w-4 h-4" /> Catalog
-          </button>
-          <button
-            onClick={() => setActiveTab("vitals")}
-            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap ${
-              activeTab === "vitals" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Activity className="w-4 h-4" /> Vitals
           </button>
           <button
             onClick={() => setActiveTab("pageseo")}
@@ -615,19 +596,6 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
         {activeTab === "pageseo" && (
           <Suspense fallback={<div className="py-12 text-center text-sm text-muted-foreground">Loading page SEO editor…</div>}>
             <SeoBulkEditor />
-          </Suspense>
-        )}
-
-        {activeTab === "analytics" && (
-          <Suspense fallback={<div className="py-12 text-center text-sm text-muted-foreground">Loading analytics…</div>}>
-            <AnalyticsPanel />
-          </Suspense>
-        )}
-
-
-        {activeTab === "vitals" && (
-          <Suspense fallback={<div className="py-12 text-center text-sm text-muted-foreground">Loading vitals…</div>}>
-            <WebVitalsPanel />
           </Suspense>
         )}
 

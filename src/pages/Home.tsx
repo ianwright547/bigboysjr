@@ -11,20 +11,11 @@ import {
   ListChecks,
   Truck,
   Star,
-  Sofa,
-  Refrigerator,
-  TreePine,
-  Trash2,
-  Package,
   ArrowRight,
   MapPin,
   Headphones,
   Zap,
   ChevronDown,
-  Flame,
-  HardHat,
-  BedDouble,
-  Building2,
 } from "lucide-react";
 import heroIsometric from "@/assets/hero-isometric.avif";
 import truckImg from "@/assets/hero-truck.avif";
@@ -33,6 +24,9 @@ import haulerImg from "@/assets/junk-hauler.avif";
 import Seo from "@/components/Seo";
 import { useSeoOverride } from "@/hooks/useSeoOverride";
 import { CITIES } from "@/data/cities";
+import { SERVICE_LINKS } from "@/data/services";
+import { JOB_PROJECTS } from "@/data/jobPhotos";
+import RealJobGallery from "@/components/RealJobGallery";
 
 const AnimatedHeroBackground = lazy(() => import("@/components/AnimatedHeroBackground"));
 
@@ -399,6 +393,18 @@ const REVIEWS = [
   { name: "Shannon Bryan", title: "Reliable and professional", quote: "Awesome service! Friendly, quick, and efficient!", stars: 5 },
   { name: "Christian Bukuru", title: "Best junk removal in Atlanta", quote: "The Best junk removal in Atlanta Georgia ❤️💪", stars: 5 },
   { name: "Gopa Bhattacharya", title: "Highly recommended", quote: "Very professional and easy pickup. Highly recommended.", stars: 5 },
+  { name: "Heather Dobbs", title: "Excellent service", quote: "Excellent service, great guys! Helped me out big time!", stars: 5 },
+  { name: "Green", title: "Same-day piano removal", quote: "I called for a quote and availability and they were able to stop by that day to safely remove an upright piano.", stars: 5 },
+  { name: "Nancy Hughes", title: "Respectful crew", quote: "The team was within schedule, polite and cheerful. Thank you for showing respect to our property!", stars: 5 },
+  { name: "Seth Winterbottom", title: "Top-notch communication", quote: "Scheduling and communication were top notch. They did a great job incredibly quickly. Couldn't be happier.", stars: 5 },
+  { name: "Virginia Martin", title: "Quick and friendly", quote: "Quick, efficient and friendly.", stars: 5 },
+  { name: "Sage Nance", title: "Professional and affordable", quote: "Professional, efficient, and affordable!", stars: 5 },
+  { name: "yS Chang", title: "Entire basement cleared", quote: "Good communication, prompt service, and fair price. I cleaned out my entire basement for a future project!", stars: 5 },
+  { name: "Jasmine A. Turner", title: "Quick and professional", quote: "Devin and his team were amazing! So quick, professional and efficient!", stars: 5 },
+  { name: "Meredith Wikstrom", title: "Careful furniture removal", quote: "They arrived early, kept me updated, and took care when moving my furniture out. I would use them again.", stars: 5 },
+  { name: "Matthew Cagle", title: "Quick response", quote: "Good guys. Quick response and professional. Would use them again.", stars: 5 },
+  { name: "Virginia Horan", title: "Flexible and respectful", quote: "Amazing communicators, flexible with the pickup day, speedy and respectful!", stars: 5 },
+  { name: "Reshma A", title: "Professional TV removal", quote: "The team came on time to remove my broken TV and were very professional. I highly recommend them.", stars: 5 },
 ];
 
 const SocialProof = () => {
@@ -524,20 +530,6 @@ const SocialProof = () => {
   );
 };
 
-/* ─── Services Grid with links ─── */
-const SERVICES = [
-  { icon: Sofa, name: "Furniture Removal", slug: "/services/furniture-removal" },
-  { icon: Refrigerator, name: "Appliance Removal", slug: "/services/appliance-removal" },
-  { icon: BedDouble, name: "Mattress Removal", slug: "/services/mattress-removal" },
-  { icon: Flame, name: "Hot Tub Removal", slug: "/services/hot-tub-removal" },
-  { icon: TreePine, name: "Yard Waste Removal", slug: "/services/yard-waste-removal" },
-  { icon: Trash2, name: "General Junk Removal", slug: "/services/junk-removal" },
-  { icon: Package, name: "Garage & Basement Cleanouts", slug: "/services/cleanouts" },
-  { icon: HardHat, name: "Construction Debris", slug: "/services/construction-debris" },
-  { icon: Building2, name: "Commercial Junk Removal", slug: "/services/commercial-junk-removal" },
-  { icon: Package, name: "Whole-Property Cleanouts", slug: "/services/whole-property-cleanouts" },
-];
-
 const ServiceList = ({ id }: { id?: string }) => (
   <section id={id} className="bg-muted/40 py-16 sm:py-24">
     <div className="max-w-5xl mx-auto px-4">
@@ -561,8 +553,8 @@ const ServiceList = ({ id }: { id?: string }) => (
       >
         We haul it all: from single items to full property cleanouts across multiple cities and metro areas.
       </motion.p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {SERVICES.map((s, i) => (
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {SERVICE_LINKS.map((s, i) => (
           <motion.div
             key={s.name}
             initial="hidden"
@@ -573,10 +565,19 @@ const ServiceList = ({ id }: { id?: string }) => (
           >
             <Link
               to={s.slug}
-              className="flex flex-col items-center gap-3 bg-card border border-border rounded-xl px-4 py-5 shadow-sm hover:border-primary/40 hover:shadow-md transition-all text-center group"
+              className="block overflow-hidden bg-card border border-border rounded-2xl shadow-sm hover:border-primary/40 hover:shadow-md transition-all group h-full"
             >
-              <s.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
-              <span className="text-sm font-medium text-foreground">{s.name}</span>
+              <div className="aspect-[16/10] overflow-hidden bg-muted">
+                <img src={s.image} alt={`${s.name} project completed by Big Boys Junk Removal`} width={640} height={400} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              </div>
+              <div className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><s.icon className="w-5 h-5" /></span>
+                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">{s.name}</h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{s.description}</p>
+                <span className="inline-flex items-center text-sm font-semibold text-primary">Explore service <ArrowRight className="w-4 h-4 ml-1" /></span>
+              </div>
             </Link>
           </motion.div>
         ))}
@@ -806,6 +807,13 @@ const Home = () => {
     <LiveAgentSection />
     <TrustBar />
     <BeforeAfter />
+    <RealJobGallery
+      projects={JOB_PROJECTS.slice(0, 3)}
+      eyebrow="More recent transformations"
+      heading="Real Junk Removal Results Across Metro Atlanta"
+      description="Every project below uses photos from an actual Big Boys pickup. See the volume removed and the clean space left behind."
+      className="border-b border-border"
+    />
     <ServiceList id="services" />
     <HowItWorks />
     <ServiceArea />

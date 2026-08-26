@@ -1,12 +1,14 @@
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, ShieldCheck, Clock, Star, Phone } from "lucide-react";
+import { ArrowRight, CheckCircle2, ShieldCheck, Clock, Star, Phone, Home, Building2, KeyRound, ChevronDown } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { CITIES } from "@/data/cities";
 import { SERVICE_LINKS } from "@/data/services";
 import { useSeoOverride } from "@/hooks/useSeoOverride";
 import Seo from "@/components/Seo";
+import RealJobGallery from "@/components/RealJobGallery";
+import { getProjectsForPath } from "@/data/jobPhotos";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -57,6 +59,7 @@ const ServicePageTemplate = ({ data }: { data: ServicePageData }) => {
   const metaDescription = seo?.description || data.metaDescription;
   const heroHeading = seo?.h1 || data.heroHeading;
   const faqs = [...data.faq, ...commonServiceFaqs(data.title)];
+  const projects = getProjectsForPath(pathname, 3);
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -135,6 +138,14 @@ const ServicePageTemplate = ({ data }: { data: ServicePageData }) => {
           </div>
         </section>
 
+        <RealJobGallery
+          projects={projects}
+          eyebrow="Photos from real pickups"
+          heading={`${data.title} Before and After`}
+          description={`See the kinds of spaces our crew clears during ${data.title.toLowerCase()} appointments across Metro Atlanta and North Georgia.`}
+          className="border-y border-border"
+        />
+
         {/* How It Works */}
         <section className="bg-muted/40 py-16 sm:py-20">
           <div className="max-w-3xl mx-auto px-4">
@@ -153,6 +164,29 @@ const ServicePageTemplate = ({ data }: { data: ServicePageData }) => {
                   </span>
                   <p className="text-sm sm:text-base text-foreground pt-1">{step}</p>
                 </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Common project situations */}
+        <section className="bg-muted/40 py-16 sm:py-20 border-y border-border">
+          <div className="max-w-5xl mx-auto px-4">
+            <div className="max-w-2xl mx-auto text-center mb-10">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">When {data.title} Is the Right Fit</h2>
+              <p className="text-muted-foreground leading-relaxed">The same service can solve very different problems. Share the setting and deadline when you book so the crew can plan equipment, access, labor, and truck space.</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-5">
+              {[
+                { icon: Home, title: "Home projects", text: `Decluttering, downsizing, replacing bulky items, reclaiming storage space, and preparing a home for a move or renovation are all common ${data.title.toLowerCase()} requests.` },
+                { icon: KeyRound, title: "Moves and turnovers", text: "Landlords, tenants, real estate professionals, and families use the service to clear items left behind and make a property ready for cleaning, repairs, listing, or move-in." },
+                { icon: Building2, title: "Business and managed properties", text: "Property managers and businesses can coordinate access, loading areas, elevators, parking, and an on-site contact for efficient removal with minimal disruption." },
+              ].map(({ icon: Icon, title, text }) => (
+                <article key={title} className="rounded-2xl border border-border bg-card p-6">
+                  <Icon className="w-7 h-7 text-primary mb-4" />
+                  <h3 className="text-lg font-bold text-foreground mb-2">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
+                </article>
               ))}
             </div>
           </div>
@@ -210,6 +244,20 @@ const ServicePageTemplate = ({ data }: { data: ServicePageData }) => {
           </div>
         </section>
 
+        <section className="bg-background py-16 sm:py-20">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm">
+              <div className="flex gap-1 mb-4" aria-label="5 out of 5 stars">
+                {Array.from({ length: 5 }).map((_, index) => <Star key={index} className="w-5 h-5 fill-primary text-primary" />)}
+              </div>
+              <blockquote className="text-lg sm:text-xl font-medium text-foreground leading-relaxed mb-5">
+                “Scheduling and communication were top notch. They did a great job incredibly quickly. Couldn't be happier.”
+              </blockquote>
+              <p className="text-sm font-bold text-muted-foreground">Seth Winterbottom, verified customer</p>
+            </div>
+          </div>
+        </section>
+
         {/* FAQ */}
         {faqs.length > 0 && (
           <section className="bg-muted/40 py-16 sm:py-20">
@@ -217,10 +265,13 @@ const ServicePageTemplate = ({ data }: { data: ServicePageData }) => {
               <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8 text-center">Frequently Asked Questions About {data.title}</h2>
               <div className="space-y-4">
                 {faqs.map((f, i) => (
-                  <div key={i} className="bg-card border border-border rounded-xl p-5">
-                    <h3 className="text-sm font-semibold text-foreground mb-2">{f.q}</h3>
-                    <p className="text-sm text-muted-foreground">{f.a}</p>
-                  </div>
+                  <details key={i} className="group bg-card border border-border rounded-xl p-5 open:border-primary/30">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-foreground">
+                      {f.q}
+                      <ChevronDown className="w-5 h-5 text-primary transition-transform group-open:rotate-180 flex-shrink-0" />
+                    </summary>
+                    <p className="text-sm text-muted-foreground leading-relaxed pt-4">{f.a}</p>
+                  </details>
                 ))}
               </div>
               <script

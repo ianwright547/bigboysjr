@@ -18,6 +18,8 @@ import { SERVICE_LINKS as SERVICES } from "@/data/services";
 import { useSeoOverride } from "@/hooks/useSeoOverride";
 import PremiumCleanoutCTA from "@/components/PremiumCleanoutCTA";
 import Seo from "@/components/Seo";
+import RealJobGallery from "@/components/RealJobGallery";
+import { getProjectsForPath } from "@/data/jobPhotos";
 
 const AnimatedHeroBackground = lazy(() => import("@/components/AnimatedHeroBackground"));
 
@@ -76,6 +78,14 @@ const REVIEWS = [
   { name: "Shannon Bryan", title: "Reliable and professional", quote: "Awesome service! Friendly, quick, and efficient!", stars: 5 },
   { name: "Christian Bukuru", title: "Best junk removal in Atlanta", quote: "The Best junk removal in Atlanta Georgia ❤️💪", stars: 5 },
   { name: "Gopa Bhattacharya", title: "Highly recommended", quote: "Very professional and easy pickup. Highly recommended.", stars: 5 },
+  { name: "Heather Dobbs", title: "Excellent service", quote: "Excellent service, great guys! Helped me out big time!", stars: 5 },
+  { name: "Green", title: "Prompt piano removal", quote: "They were able to stop by the same day to safely remove an upright piano. Thank you so much for your promptness!", stars: 5 },
+  { name: "Nancy Hughes", title: "Respectful of the property", quote: "The team was within schedule, polite and cheerful. Thank you for showing respect to our property!", stars: 5 },
+  { name: "Seth Winterbottom", title: "Top-notch communication", quote: "Scheduling and communication were top notch. They did a great job incredibly quickly.", stars: 5 },
+  { name: "yS Chang", title: "Basement cleared", quote: "Good communication, prompt service, and fair price. I cleaned out my entire basement for a future project!", stars: 5 },
+  { name: "Meredith Wikstrom", title: "Careful furniture removal", quote: "They kept me updated, arrived early, and took care when moving my furniture out.", stars: 5 },
+  { name: "Virginia Horan", title: "Flexible and respectful", quote: "Amazing communicators, flexible with the pickup day, speedy and respectful!", stars: 5 },
+  { name: "Reshma A", title: "Professional TV removal", quote: "The team came on time to remove my broken TV and were very professional.", stars: 5 },
 ];
 
 /* ─── Services ─── */
@@ -109,6 +119,7 @@ const CityLandingPage = ({ city }: { city: CityData }) => {
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
   const visibleReviews = showAllReviews ? REVIEWS: REVIEWS.slice(0, 6);
   const faqs = FAQS_FOR_CITY(city.name);
+  const projects = getProjectsForPath(city.slug, 3);
   const linkedCities = CITIES.filter((c) => city.nearbyCitySlugs.includes(c.slug));
 
   useEffect(() => {
@@ -287,6 +298,38 @@ const CityLandingPage = ({ city }: { city: CityData }) => {
               We pride ourselves on <strong>fast response times in {city.name}</strong>, upfront transparent pricing with no hidden fees, and a local crew that knows the {city.name} area inside and out. From single-item pickups to full property cleanouts, Big Boys is {city.name}'s trusted junk removal company.
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      <RealJobGallery
+        projects={projects}
+        eyebrow={`Recent projects near ${city.name}`}
+        heading={`Real Junk Removal Results for ${city.name} Customers`}
+        description={`See before-and-after examples of the cleanouts, bulky-item pickups, and outdoor removal work Big Boys completes for homes and managed properties around ${city.name}.`}
+        className="border-y border-border"
+      />
+
+      <section className="bg-background py-16 sm:py-24">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
+            <div>
+              <p className="text-primary font-bold uppercase tracking-widest text-sm mb-2">Local pickup planning</p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-5">Junk Removal for Every Kind of {city.name} Property</h2>
+              <div className="space-y-4 text-muted-foreground leading-relaxed">
+                <p>Homes, apartments, townhomes, storage units, offices, rentals, and renovation sites all create different access challenges. Tell us whether items are upstairs, behind a gate, in a basement, near a loading dock, or spread across several rooms so we can plan the pickup correctly.</p>
+                <p>For larger cleanouts, group items by room or removal priority and identify anything that needs disassembly. For a few known pieces, item pricing is usually the fastest route. Mixed piles and property-wide projects are often easier to estimate by load size.</p>
+                <p>Big Boys serves {city.name} and nearby communities including {city.nearbyAreas.slice(0, 4).join(", ")}. Availability depends on route capacity, but same-day and next-day appointments are often available.</p>
+              </div>
+            </div>
+            <aside className="rounded-2xl border border-border bg-muted/40 p-6 sm:p-8">
+              <h3 className="text-xl font-bold text-foreground mb-5">Details that help us arrive prepared</h3>
+              <ul className="space-y-4">
+                {["A clear list or photos of what should go", "Stairs, elevators, gates, and parking instructions", "Heavy, oversized, or specialty items", "Disassembly and long-carry needs", "Preferred pickup date and time window", "An on-site contact for rentals or commercial properties"].map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm text-foreground"><CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />{item}</li>
+                ))}
+              </ul>
+            </aside>
+          </div>
         </div>
       </section>
 

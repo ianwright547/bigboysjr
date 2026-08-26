@@ -48,8 +48,7 @@ Preserve the currently working systems and production connections:
 - Supabase project, tables, policies, authentication, functions, and environment values
 - Quote funnel state, fields, step order, item catalog, load pricing, calculations, discounts, booking, and confirmation behavior
 - Lead and callback submissions and their existing destinations
-- Admin login, catalog manager, lead manager, SEO tools, analytics, web-vitals, and tracking
-- Chat and any existing email or SMS behavior
+- Admin login, catalog manager, lead manager, SEO tools, and email notifications
 - Existing production domain, Vercel project settings, secrets, and environment configuration
 
 Do not replace real integrations with mock data or hard-coded results. Do not reset or reconnect Supabase. Do not modify protected backend behavior merely to make a front-end change easier.
@@ -64,8 +63,7 @@ Protected paths include:
 - `src/pages/Admin.tsx`
 - `src/pages/ResetPassword.tsx`
 - `src/pages/Unsubscribe.tsx`
-- `src/components/ChatWidget.tsx`
-- integration, authentication, pricing, tracking, and submission logic
+- integration, authentication, pricing, and submission logic
 
 If a required enhancement conflicts with protected functionality, stop and document the conflict instead of silently changing the business system.
 

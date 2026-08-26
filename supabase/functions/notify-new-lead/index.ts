@@ -271,72 +271,11 @@ Deno.serve(async (req) => {
       console.error("Email send failed:", emailErr);
     }
 
-    // 4. Send SMS notification via Twilio connector gateway
-    let smsSuccess = false;
-    try {
-      const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-      const TWILIO_API_KEY = Deno.env.get("TWILIO_API_KEY");
-      const TWILIO_PHONE_NUMBER = Deno.env.get("TWILIO_PHONE_NUMBER");
-      const adminPhone = Deno.env.get("ADMIN_PHONE") || Deno.env.get("NOTIFICATION_PHONE") || "+14706606874";
-
-      if (LOVABLE_API_KEY && TWILIO_API_KEY && TWILIO_PHONE_NUMBER && adminPhone) {
-        const GATEWAY_URL = "https://connector-gateway.lovable.dev/twilio";
-
-        // Build SMS body
-        let smsBody = `🚛 NEW BOOKING\n${safeName} · ${safePhone}`;
-        if (totalPrice != null) smsBody += `\n💰 $${totalPrice}`;
-        if (bookingDate) {
-          const d = new Date(bookingDate + "T12:00:00");
-          smsBody += `\n📅 ${d.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
-        }
-        if (timeSlot) {
-          const slotLabels: Record<string, string> = { morning: "8am-12pm", afternoon: "12pm-4pm", evening: "4pm-7pm" };
-          smsBody += ` · ${slotLabels[timeSlot] || timeSlot}`;
-        }
-        if (safeAddress) smsBody += `\n📍 ${safeAddress}`;
-        if (requestType === "item_pricing" && selectedItems?.length) {
-          const itemList = selectedItems.slice(0, 4).map((i: any) => `${i.name}×${i.quantity}`).join(", ");
-          smsBody += `\n📦 ${itemList}`;
-          if (selectedItems.length > 4) smsBody += ` +${selectedItems.length - 4} more`;
-        }
-        if (requestType === "load_size" && loadSize) {
-          smsBody += `\n🚛 ${loadSize.id} Load`;
-        }
-
-        const smsResponse = await fetch(`${GATEWAY_URL}/Messages.json`, {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-            "X-Connection-Api-Key": TWILIO_API_KEY,
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({
-            To: adminPhone,
-            From: TWILIO_PHONE_NUMBER,
-            Body: smsBody,
-          }),
-        });
-
-        const smsData = await smsResponse.json();
-        if (!smsResponse.ok) {
-          console.error(`Twilio SMS error [${smsResponse.status}]:`, JSON.stringify(smsData));
-        } else {
-          smsSuccess = true;
-          console.log(`SMS sent to ${adminPhone}: SID ${smsData.sid}`);
-        }
-      } else {
-        console.log("SMS skipped: missing Twilio credentials");
-      }
-    } catch (smsErr) {
-      console.error("SMS send failed:", smsErr);
-    }
-
     return new Response(
       JSON.stringify({
         success: true,
         leadStored: leadStored || skipInsert,
         emailSent: emailSuccess,
-        smsSent: smsSuccess,
       }),
       {
         status: 200,

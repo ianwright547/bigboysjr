@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
 import Seo from "@/components/Seo";
+import { getProjectsForPath } from "@/data/jobPhotos";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -66,7 +67,7 @@ const Blog = () => (
       description="Practical Atlanta junk removal guides covering pricing, decluttering, recycling, cleanouts, and choosing between pickup service and dumpsters."
       path="/blog"
     />
-    <div className="max-w-4xl mx-auto px-4 py-16 sm:py-24">
+    <div className="max-w-6xl mx-auto px-4 py-16 sm:py-24">
       <motion.h1 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}
         className="text-4xl sm:text-5xl font-bold text-foreground text-center mb-4"
       >
@@ -75,27 +76,39 @@ const Blog = () => (
       <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1}
         className="text-center text-muted-foreground mb-12 max-w-xl mx-auto"
       >
-        Expert advice on decluttering, recycling, and getting the most out of junk removal in Atlanta.
+        Detailed, practical advice on pricing, decluttering, cleanouts, preparation, recycling, and choosing the right removal service for Atlanta-area properties.
       </motion.p>
-      <div className="space-y-6">
+      <div className="grid md:grid-cols-2 gap-6">
         {POSTS.map((post, i) => (
           <motion.article key={post.slug} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
             <Link
               to={`/blog/${post.slug}`}
-              className="block bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-primary/40 hover:shadow-md transition-all group"
+              className="block overflow-hidden bg-card border border-border rounded-2xl hover:border-primary/40 hover:shadow-md transition-all group h-full"
             >
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                <Calendar className="w-3.5 h-3.5" /> {post.date}
+              <div className="aspect-[16/9] overflow-hidden bg-muted">
+                <img src={getProjectsForPath(post.slug, 1)[0].before} alt={getProjectsForPath(post.slug, 1)[0].beforeAlt} width={720} height={405} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{post.title}</h2>
-              <p className="text-sm text-muted-foreground mb-4">{post.excerpt}</p>
-              <span className="inline-flex items-center text-sm font-semibold text-primary">
-                Read more <ArrowRight className="w-4 h-4 ml-1" />
-              </span>
+              <div className="p-6 sm:p-7">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3"><Calendar className="w-3.5 h-3.5" /> {post.date}</div>
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{post.title}</h2>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{post.excerpt}</p>
+                <span className="inline-flex items-center text-sm font-semibold text-primary">Read the complete guide <ArrowRight className="w-4 h-4 ml-1" /></span>
+              </div>
             </Link>
           </motion.article>
         ))}
       </div>
+
+      <section className="mt-16 rounded-2xl border border-border bg-muted/40 p-6 sm:p-10">
+        <div className="max-w-3xl">
+          <p className="text-primary font-bold uppercase tracking-widest text-sm mb-2">Start with the right guide</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">Plan a safer, faster junk removal project</h2>
+          <div className="space-y-4 text-muted-foreground leading-relaxed">
+            <p>Use the pricing guide when you are comparing item and load estimates. Read the pickup-preparation guide when access, stairs, parking, or building rules could affect the appointment. For larger family or property transitions, the estate-cleanout and garage-decluttering guides provide a room-by-room process.</p>
+            <p>Each guide is written for Metro Atlanta conditions and links directly to the matching service and city pages. When you are ready, the online pricing flow lets you enter a ZIP code, choose items or load size, describe access details, and select an available pickup window.</p>
+          </div>
+        </div>
+      </section>
     </div>
   </>
 );

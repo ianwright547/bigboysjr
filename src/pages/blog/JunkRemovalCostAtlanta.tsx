@@ -3,9 +3,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import Seo from "@/components/Seo";
+import { getProjectsForPath } from "@/data/jobPhotos";
 
-const JunkRemovalCostAtlanta = () => (
-  <>
+const JunkRemovalCostAtlanta = () => {
+  const project = getProjectsForPath("junk-removal-cost-atlanta", 1)[0];
+
+  return <>
     <Seo
       title="How Much Does Junk Removal Cost in Atlanta? | 2026 Guide"
       description="See the factors that affect Atlanta junk removal pricing, compare item and load pricing, and learn how to plan an efficient pickup."
@@ -34,6 +37,14 @@ const JunkRemovalCostAtlanta = () => (
       <p className="text-sm text-muted-foreground">Updated April 10, 2026 • 5 min read</p>
 
       <p className="text-muted-foreground leading-relaxed">If you're searching for "junk removal near me" in Atlanta, one of your first questions is probably about cost. The good news? Junk removal in Atlanta is more affordable than most people think: especially with upfront online pricing.</p>
+
+      <figure className="not-prose my-10 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+        <div className="grid sm:grid-cols-2">
+          <div className="relative aspect-[4/3] overflow-hidden"><img src={project.before} alt={project.beforeAlt} width={720} height={540} loading="eager" decoding="async" className="h-full w-full object-cover" /><span className="absolute left-3 top-3 rounded-full bg-foreground/85 px-3 py-1 text-xs font-bold text-background">Before</span></div>
+          <div className="relative aspect-[4/3] overflow-hidden"><img src={project.after} alt={project.afterAlt} width={720} height={540} loading="lazy" decoding="async" className="h-full w-full object-cover" /><span className="absolute right-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">After</span></div>
+        </div>
+        <figcaption className="p-5 text-sm text-muted-foreground">A real Big Boys pickup showing the amount removed and the usable space left behind.</figcaption>
+      </figure>
 
       <h2 className="text-2xl font-bold text-foreground mt-8">Average Junk Removal Prices in Atlanta</h2>
       <p className="text-muted-foreground">Here's what you can expect to pay for junk removal in the Atlanta metro area:</p>
@@ -77,13 +88,28 @@ const JunkRemovalCostAtlanta = () => (
       <h2 className="text-2xl font-bold text-foreground mt-8">Get Your Exact Price Now</h2>
       <p className="text-muted-foreground">Big Boys Junk Removal offers instant online pricing: no waiting for estimates, no haggling. Enter your ZIP code, select your items or load size, and see your exact cost before booking.</p>
 
+      <h2 className="text-2xl font-bold text-foreground mt-8">Atlanta Junk Removal Pricing Questions</h2>
+      <div className="not-prose space-y-3 mt-5">
+        {[
+          { q: "Is a phone estimate the final price?", a: "An estimate is based on the scope you describe. Provide a complete item list, photos, access notes, and heavy-material details so the crew can confirm the work before loading begins." },
+          { q: "Is item pricing or load pricing better?", a: "Item pricing is usually easiest for a few known pieces. Load pricing is often clearer for mixed household clutter, several rooms, renovation leftovers, or a property cleanout." },
+          { q: "Can stairs or disassembly affect the total?", a: "Yes. Extra labor, stairs, tight access, disassembly, long carries, specialty items, and material added after booking can affect the final scope." },
+          { q: "Do I need to rent a dumpster too?", a: "Usually not. Full-service junk removal includes the crew, loading, hauling, and disposal, so most customers do not need a separate dumpster for the same material." },
+        ].map((faq) => (
+          <details key={faq.q} className="rounded-xl border border-border bg-card p-5">
+            <summary className="cursor-pointer font-semibold text-foreground">{faq.q}</summary>
+            <p className="text-sm text-muted-foreground leading-relaxed pt-3">{faq.a}</p>
+          </details>
+        ))}
+      </div>
+
       <div className="mt-8 not-prose">
         <Button asChild size="lg" className="h-14 px-10 text-lg rounded-xl font-semibold">
           <Link to="/book">Get Instant Price <ArrowRight className="w-5 h-5 ml-1" /></Link>
         </Button>
       </div>
     </article>
-  </>
-);
+  </>;
+};
 
 export default JunkRemovalCostAtlanta;

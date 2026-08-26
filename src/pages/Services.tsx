@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, Phone } from "lucide-react";
+import { ArrowRight, CheckCircle2, Phone, Star, ShieldCheck, Recycle, Home } from "lucide-react";
 import Seo from "@/components/Seo";
 import { SERVICE_LINKS } from "@/data/services";
 import { Button } from "@/components/ui/button";
+import RealJobGallery from "@/components/RealJobGallery";
+import { JOB_PROJECTS } from "@/data/jobPhotos";
 
 const Services = () => (
   <main className="pt-16">
@@ -31,17 +33,69 @@ const Services = () => (
     <section className="py-14 sm:py-20 bg-background">
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {SERVICE_LINKS.map(({ icon: Icon, name, slug }) => (
-            <Link key={slug} to={slug} className="group rounded-2xl border border-border bg-card p-6 shadow-sm hover:border-primary hover:shadow-md transition-all">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                <Icon className="w-6 h-6" />
+          {SERVICE_LINKS.map(({ icon: Icon, name, slug, description, image }) => (
+            <Link key={slug} to={slug} className="group overflow-hidden rounded-2xl border border-border bg-card shadow-sm hover:border-primary hover:shadow-md transition-all">
+              <div className="aspect-[16/10] overflow-hidden bg-muted">
+                <img src={image} alt={`${name} project by Big Boys Junk Removal`} width={640} height={400} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
               </div>
-              <h2 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{name}</h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Professional pickup with upfront pricing, careful removal from anywhere on the property, and a clean finish.
-              </p>
-              <span className="inline-flex items-center text-primary font-semibold">View service <ArrowRight className="w-4 h-4 ml-1" /></span>
+              <div className="p-6">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4"><Icon className="w-6 h-6" /></div>
+                <h2 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{name}</h2>
+                <p className="text-muted-foreground leading-relaxed mb-4">{description} We lift from the agreed location, load the truck, and leave the pickup area tidy.</p>
+                <span className="inline-flex items-center text-primary font-semibold">View service <ArrowRight className="w-4 h-4 ml-1" /></span>
+              </div>
             </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <RealJobGallery
+      projects={JOB_PROJECTS.slice(3, 6)}
+      heading="What Full-Service Removal Looks Like"
+      description="These real projects show the difference between simply hauling items away and finishing the job with a clear, usable space."
+    />
+
+    <section className="py-16 sm:py-20 bg-muted/40 border-y border-border">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <p className="text-primary font-bold uppercase tracking-widest text-sm mb-2">One crew for nearly every project</p>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Residential, commercial, and property cleanout help</h2>
+          <p className="text-muted-foreground leading-relaxed">Big Boys can handle a single heavy item, several rooms of furniture, renovation leftovers, or a complete turnover. The right service depends on the material, access, volume, and how quickly the space needs to be ready.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-5">
+          {[
+            { icon: Home, title: "Homes and apartments", text: "Furniture, appliances, mattresses, garage clutter, moving leftovers, and room-by-room cleanouts with careful indoor removal." },
+            { icon: ShieldCheck, title: "Rentals and businesses", text: "Office furniture, retail fixtures, tenant leftovers, storage areas, and recurring property-management needs with clear access planning." },
+            { icon: Recycle, title: "Responsible routing", text: "Usable and recyclable material is separated whenever practical so fewer items go directly to the landfill." },
+          ].map(({ icon: Icon, title, text }) => (
+            <article key={title} className="rounded-2xl border border-border bg-card p-6">
+              <Icon className="w-7 h-7 text-primary mb-4" />
+              <h3 className="text-xl font-bold mb-2">{title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section className="py-16 sm:py-20 bg-background">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center mb-10">
+          <p className="text-primary font-bold uppercase tracking-widest text-sm mb-2">Customer experiences</p>
+          <h2 className="text-3xl sm:text-4xl font-bold">Why customers call Big Boys again</h2>
+        </div>
+        <div className="grid md:grid-cols-3 gap-5">
+          {[
+            { name: "Green", quote: "They were able to stop by the same day to safely remove an upright piano. Thank you so much for your promptness!" },
+            { name: "yS Chang", quote: "Good communication, prompt service, and fair price. I cleaned out my entire basement for a future project!" },
+            { name: "Meredith Wikstrom", quote: "They kept me updated, arrived early, and took care when moving my furniture out. I would use them again." },
+          ].map((review) => (
+            <blockquote key={review.name} className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+              <div className="flex gap-1 mb-4" aria-label="5 out of 5 stars">{Array.from({ length: 5 }).map((_, index) => <Star key={index} className="w-4 h-4 fill-primary text-primary" />)}</div>
+              <p className="text-foreground leading-relaxed mb-4">“{review.quote}”</p>
+              <footer className="text-sm font-bold text-muted-foreground">{review.name}</footer>
+            </blockquote>
           ))}
         </div>
       </div>
