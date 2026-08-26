@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ import {
   BedDouble,
   Building2,
 } from "lucide-react";
+import heroIsometric from "@/assets/hero-isometric.avif";
 import truckImg from "@/assets/hero-truck.avif";
 import houseImg from "@/assets/house-cleanout.avif";
 import haulerImg from "@/assets/junk-hauler.avif";
@@ -33,7 +34,7 @@ import Seo from "@/components/Seo";
 import { useSeoOverride } from "@/hooks/useSeoOverride";
 import { CITIES } from "@/data/cities";
 
-// AnimatedHeroBackground removed from above-the-fold for faster LCP.
+const AnimatedHeroBackground = lazy(() => import("@/components/AnimatedHeroBackground"));
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -83,13 +84,22 @@ const ZipForm = ({ buttonText = "Check Price", dark = false }: { buttonText?: st
 };
 
 /* ─── Hero ─── */
-/* Above-the-fold: NO framer-motion, NO lazy SVG bg: pure HTML for fastest LCP */
 const Hero = ({ heading }: { heading?: string }) => (
   <section className="relative overflow-hidden bg-background">
-    <div className="relative max-w-6xl mx-auto px-4 pt-16 pb-12 sm:pt-24 sm:pb-20 flex flex-col lg:flex-row items-center gap-10">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+      <Suspense fallback={null}>
+        <AnimatedHeroBackground className="w-full h-full" opacity={0.14} />
+      </Suspense>
+    </div>
+    <div className="relative z-10 max-w-6xl mx-auto px-4 pt-16 pb-12 sm:pt-24 sm:pb-20 flex flex-col lg:flex-row items-center gap-10">
       <div className="flex-1 text-center lg:text-left">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight leading-tight mb-4">
-          {heading || "Junk Removal in Atlanta"}
+          {heading || (
+            <>
+              Junk Removal in Atlanta{" "}
+              <span className="text-primary">You Can Book Online</span>
+            </>
+          )}
         </h1>
         <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0">
           Get instant upfront pricing with same-day junk removal for furniture, appliances, and full cleanouts. No hidden fees. No waiting for quotes.
@@ -101,15 +111,15 @@ const Hero = ({ heading }: { heading?: string }) => (
       </div>
       <div className="flex-1 max-w-md lg:max-w-lg">
         <img
-          src="/photos/atlanta-junk-removal-job.jpg"
-          alt="Furniture and household items prepared for a Big Boys junk removal pickup in Metro Atlanta"
-          width={900}
-          height={1200}
+          src={heroIsometric}
+          alt="3D illustration of junk removal service with furniture and appliances"
+          width={1330}
+          height={1321}
           loading="eager"
           // @ts-expect-error fetchpriority is a valid HTML attribute, React types lag behind
           fetchpriority="high"
           decoding="async"
-          className="w-full aspect-[4/3] object-cover rounded-2xl border border-border shadow-lg"
+          className="w-full h-auto rounded-2xl"
         />
       </div>
     </div>
