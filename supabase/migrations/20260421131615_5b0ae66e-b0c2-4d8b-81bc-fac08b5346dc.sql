@@ -1,0 +1,11 @@
+-- Restore EXECUTE on has_role for authenticated users.
+-- This is required because RLS policies on user_roles call has_role(auth.uid(), 'admin').
+-- When the calling role is 'authenticated', the policy expression must be able to
+-- execute the function or the entire SELECT fails (blocking even the user's own roles).
+--
+-- The function is SECURITY DEFINER with a stable signature and only returns a boolean,
+-- so the prior concern about role enumeration is mitigated by:
+--   1. Caller must already be authenticated
+--   2. Returns only a boolean (no role list disclosure)
+--   3. Standard pattern for Supabase role checks
+GRANT EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) TO authenticated;
