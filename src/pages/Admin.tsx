@@ -79,9 +79,12 @@ const AdminLogin = ({ onAuth }: { onAuth: (user: User) => void }) => {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <Helmet><title>Admin Login | Big Boys Junk Removal</title><meta name="robots" content="noindex, nofollow" /></Helmet>
       <form onSubmit={handleLogin} className="bg-card border border-border rounded-2xl p-8 max-w-sm w-full mx-4 shadow-lg space-y-4">
-        <div className="flex items-center justify-center mb-2">
-          <Lock className="w-8 h-8 text-primary mr-2" />
-          <h1 className="text-xl font-bold text-foreground">Admin Login</h1>
+        <div className="text-center mb-3">
+          <div className="flex items-center justify-center mb-2">
+            <Lock className="w-8 h-8 text-primary mr-2" />
+            <h1 className="text-xl font-bold text-foreground">Big Boys Junk Removal Admin</h1>
+          </div>
+          <p className="text-sm text-muted-foreground">Secure business dashboard</p>
         </div>
         <div className="space-y-1">
           <label className="text-sm text-muted-foreground">Email</label>
@@ -89,7 +92,7 @@ const AdminLogin = ({ onAuth }: { onAuth: (user: User) => void }) => {
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               type="email"
-              placeholder="admin@example.com"
+              placeholder="you@bigboysjr.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="h-12 rounded-xl pl-10"
@@ -531,7 +534,7 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+            <h1 className="text-2xl font-bold text-foreground">Big Boys Admin Dashboard</h1>
           </div>
           <div className="flex gap-2">
             <Button onClick={() => setCreatingOrder(true)} size="sm" className="rounded-xl">
