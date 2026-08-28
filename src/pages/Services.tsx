@@ -33,10 +33,18 @@ const Services = () => (
     <section className="py-14 sm:py-20 bg-background">
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {SERVICE_LINKS.map(({ icon: Icon, name, slug, description, image }) => (
+          {SERVICE_LINKS.map(({ icon: Icon, name, slug, description, image, imageAlt, imageFit }) => (
             <Link key={slug} to={slug} className="group overflow-hidden rounded-2xl border border-border bg-card shadow-sm hover:border-primary hover:shadow-md transition-all">
               <div className="aspect-[16/10] overflow-hidden bg-muted">
-                <img src={image} alt={`${name} project by Big Boys Junk Removal`} width={640} height={400} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img
+                  src={image}
+                  alt={imageAlt}
+                  width={640}
+                  height={400}
+                  loading="lazy"
+                  decoding="async"
+                  className={`h-full w-full transition-transform duration-500 group-hover:scale-105 ${imageFit === "contain" ? "object-contain p-8 bg-white" : "object-cover"}`}
+                />
               </div>
               <div className="p-6">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4"><Icon className="w-6 h-6" /></div>

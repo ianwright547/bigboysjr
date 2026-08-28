@@ -74,8 +74,24 @@ export const JOB_PROJECTS: JobProject[] = [
   },
 ];
 
+const SERVICE_PROJECT_INDEXES: Record<string, number[]> = {
+  "/services/junk-removal": [6, 3, 0],
+  "/services/furniture-removal": [5, 3, 0],
+  "/services/appliance-removal": [3, 1, 5],
+  "/services/mattress-removal": [3, 5, 0],
+  "/services/hot-tub-removal": [0, 7, 4],
+  "/services/yard-waste-removal": [4, 7, 0],
+  "/services/cleanouts": [2, 3, 6],
+  "/services/construction-debris": [1, 2, 0],
+  "/services/commercial-junk-removal": [1, 5, 6],
+  "/services/whole-property-cleanouts": [0, 3, 6],
+};
+
 export const getProjectsForPath = (path: string, count = 3) => {
+  const serviceIndexes = SERVICE_PROJECT_INDEXES[path];
+  if (serviceIndexes) {
+    return serviceIndexes.slice(0, count).map((index) => JOB_PROJECTS[index]);
+  }
   const seed = [...path].reduce((total, character) => total + character.charCodeAt(0), 0) % JOB_PROJECTS.length;
   return Array.from({ length: Math.min(count, JOB_PROJECTS.length) }, (_, index) => JOB_PROJECTS[(seed + index) % JOB_PROJECTS.length]);
 };
-

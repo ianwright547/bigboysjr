@@ -568,7 +568,15 @@ const ServiceList = ({ id }: { id?: string }) => (
               className="block overflow-hidden bg-card border border-border rounded-2xl shadow-sm hover:border-primary/40 hover:shadow-md transition-all group h-full"
             >
               <div className="aspect-[16/10] overflow-hidden bg-muted">
-                <img src={s.image} alt={`${s.name} project completed by Big Boys Junk Removal`} width={640} height={400} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img
+                  src={s.image}
+                  alt={s.imageAlt}
+                  width={640}
+                  height={400}
+                  loading="lazy"
+                  decoding="async"
+                  className={`h-full w-full transition-transform duration-500 group-hover:scale-105 ${s.imageFit === "contain" ? "object-contain p-8 bg-white" : "object-cover"}`}
+                />
               </div>
               <div className="p-5">
                 <div className="flex items-center gap-3 mb-3">

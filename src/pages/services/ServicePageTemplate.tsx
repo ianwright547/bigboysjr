@@ -141,8 +141,8 @@ const ServicePageTemplate = ({ data }: { data: ServicePageData }) => {
         <RealJobGallery
           projects={projects}
           eyebrow="Photos from real pickups"
-          heading={`${data.title} Before and After`}
-          description={`See the kinds of spaces our crew clears during ${data.title.toLowerCase()} appointments across Metro Atlanta and North Georgia.`}
+          heading="Real Big Boys Pickup Results"
+          description={`These before-and-after photos show recent removal and cleanout work completed by our crew across Metro Atlanta and North Georgia. Each caption identifies what was actually removed.`}
           className="border-y border-border"
         />
 
