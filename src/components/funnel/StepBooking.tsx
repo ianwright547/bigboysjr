@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { forwardLead } from "@/lib/forwardLead";
 
 const TIME_SLOTS = [
   { id: "morning", label: "Morning", sub: "8am - 12pm" },
@@ -154,7 +155,28 @@ const StepBooking = () => {
     //    so they no longer depend on this browser completing an extra request.
     void notificationDispatched;
 
-
+    try {
+      await forwardLead({
+        leadId: savedId === "server-saved" ? idempotencyKey : savedId,
+        name: leadRow.name,
+        phone: leadRow.phone,
+        email: leadRow.email,
+        address: leadRow.address,
+        zipCode: zip,
+        pricingMethod,
+        selectedItems,
+        loadSize: pricingMethod === "load" ? selectedLoadSize : null,
+        addOns,
+        totalPrice,
+        requestType: leadRow.request_type,
+        message: leadRow.message,
+        bookingDate: leadRow.booking_date,
+        timeSlot: leadRow.time_slot,
+      });
+    } catch (webhookError) {
+      console.error("CRM lead forwarding error:", webhookError);
+      // The booking is already safely stored in Supabase, so do not block the customer.
+    }
 
     setSubmitting(false);
     next();

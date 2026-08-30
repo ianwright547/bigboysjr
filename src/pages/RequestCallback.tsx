@@ -15,6 +15,7 @@ import { Phone, Zap, CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
+import { forwardLead } from "@/lib/forwardLead";
 
 const AnimatedHeroBackground = lazy(() => import("@/components/AnimatedHeroBackground"));
 
@@ -61,6 +62,22 @@ const RequestCallback = () => {
     } catch (err) {
       console.error("Lead notification error:", err);
       // Don't block user flow
+    }
+
+    try {
+      await forwardLead({
+        name,
+        phone,
+        email: email || null,
+        zipCode: zip || null,
+        address: address || null,
+        message: message || null,
+        urgency: urgency || null,
+        requestType: "live_agent",
+      });
+    } catch (webhookError) {
+      console.error("CRM lead forwarding error:", webhookError);
+      // Supabase remains the source of truth, so a CRM outage does not block the form.
     }
 
     // Also store locally for backwards compatibility
