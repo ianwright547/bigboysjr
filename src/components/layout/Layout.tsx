@@ -20,8 +20,8 @@ const Layout = () => {
       <Footer />
       {!hidePreferredSource && (
         <PreferredSourceButton
-          className={`fixed right-4 z-30 max-w-[calc(100vw-2rem)] shadow-lg sm:bottom-5 sm:right-5 ${
-            isCityPage ? "bottom-20" : "bottom-4"
+          className={`fixed right-2 z-30 max-w-[calc(100vw-1rem)] sm:bottom-4 sm:right-4 ${
+            isCityPage ? "bottom-[4.5rem]" : "bottom-2"
           }`}
         />
       )}

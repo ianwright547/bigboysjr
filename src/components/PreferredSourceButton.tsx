@@ -45,14 +45,18 @@ const PreferredSourceButton = ({ className }: PreferredSourceButtonProps) => {
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+        "inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-foreground/10 bg-background/95 px-3 text-xs font-bold text-foreground shadow-[0_6px_22px_rgba(15,23,42,0.16)] backdrop-blur-sm transition-colors duration-200 hover:border-primary/40 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transform-gpu",
         className,
       )}
+      style={{ WebkitTransform: "translateZ(0)", transform: "translateZ(0)" }}
       aria-label="Add Big Boys Junk Removal as a preferred source in Google Search"
+      title="Add Big Boys to Google Preferred Sources"
     >
-      <Star className="h-4 w-4" aria-hidden="true" />
-      <span className="sm:hidden">Google Preferred Source</span>
-      <span className="hidden sm:inline">Add to Google Preferred Sources</span>
+      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
+        <Star className="h-3.5 w-3.5 fill-primary/15 text-primary" aria-hidden="true" />
+      </span>
+      <span className="sm:hidden">Google</span>
+      <span className="hidden sm:inline">Preferred on Google</span>
     </a>
   );
 };
