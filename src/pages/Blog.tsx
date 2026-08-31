@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
 import Seo from "@/components/Seo";
 import { getProjectsForPath } from "@/data/jobPhotos";
-import PreferredSourceButton from "@/components/PreferredSourceButton";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -75,28 +74,10 @@ const Blog = () => (
         Atlanta Junk Removal Tips and Guides
       </motion.h1>
       <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1}
-        className="text-center text-muted-foreground mb-8 max-w-xl mx-auto"
+        className="text-center text-muted-foreground mb-12 max-w-xl mx-auto"
       >
         Detailed, practical advice on pricing, decluttering, cleanouts, preparation, recycling, and choosing the right removal service for Atlanta-area properties.
       </motion.p>
-
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={fadeUp}
-        custom={2}
-        className="mx-auto mb-12 flex max-w-3xl flex-col items-center justify-between gap-4 rounded-2xl border border-primary/20 bg-primary/5 p-5 text-center sm:flex-row sm:text-left"
-      >
-        <div>
-          <p className="font-bold text-foreground">Get Big Boys guides highlighted in Google</p>
-          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            Choose Big Boys as a preferred source to make our practical Atlanta cleanup guides easier to find in your Google results.
-          </p>
-        </div>
-        <PreferredSourceButton className="w-full shrink-0 sm:w-auto" />
-      </motion.div>
-
       <div className="grid md:grid-cols-2 gap-6">
         {POSTS.map((post, i) => (
           <motion.article key={post.slug} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>

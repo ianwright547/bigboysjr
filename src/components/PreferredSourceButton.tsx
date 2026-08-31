@@ -27,11 +27,10 @@ if (typeof window !== "undefined") {
 }
 
 interface PreferredSourceButtonProps {
-  inverted?: boolean;
   className?: string;
 }
 
-const PreferredSourceButton = ({ inverted = false, className }: PreferredSourceButtonProps) => {
+const PreferredSourceButton = ({ className }: PreferredSourceButtonProps) => {
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (!preferredSourceClient) return;
 
@@ -46,16 +45,14 @@ const PreferredSourceButton = ({ inverted = false, className }: PreferredSourceB
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-        inverted
-          ? "border-background/25 bg-background text-foreground hover:bg-background/90"
-          : "border-primary bg-primary text-primary-foreground hover:bg-primary/90",
+        "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
         className,
       )}
       aria-label="Add Big Boys Junk Removal as a preferred source in Google Search"
     >
       <Star className="h-4 w-4" aria-hidden="true" />
-      Add to Google Preferred Sources
+      <span className="sm:hidden">Google Preferred Source</span>
+      <span className="hidden sm:inline">Add to Google Preferred Sources</span>
     </a>
   );
 };
