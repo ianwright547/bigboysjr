@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Phone, Mail, MapPin, ShieldCheck } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { SERVICE_LINKS } from "@/data/services";
+import PreferredSourceButton from "@/components/PreferredSourceButton";
 
 const QUICK_LINKS = [
   { label: "Home", to: "/" },
@@ -78,6 +79,16 @@ const Footer = () => {
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-4 border-t border-background/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-2xl">
+            <p className="font-bold text-background">Follow Big Boys in Google Search</p>
+            <p className="mt-1 text-sm leading-relaxed text-background/60">
+              Add our local guides as a preferred source to find more Big Boys tips in Google Search and AI results.
+            </p>
+          </div>
+          <PreferredSourceButton inverted className="w-full shrink-0 sm:w-auto" />
         </div>
       </div>
 
