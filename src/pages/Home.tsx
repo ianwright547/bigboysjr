@@ -49,9 +49,9 @@ const ZipForm = ({ buttonText = "Check Price", dark = false }: { buttonText?: st
   };
 
   return (
-    <div className="relative flex w-full max-w-2xl flex-col gap-3 sm:flex-row">
+    <div className="relative flex w-full max-w-2xl flex-row gap-2.5 sm:gap-3">
       <div className="relative flex-1">
-        <MapPin className={`pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 ${dark ? "text-primary-foreground/70" : "text-muted-foreground"}`} aria-hidden="true" />
+        <MapPin className={`pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 sm:left-4 ${dark ? "text-primary-foreground/70" : "text-muted-foreground"}`} aria-hidden="true" />
         <Input
           type="text"
           inputMode="numeric"
@@ -64,17 +64,17 @@ const ZipForm = ({ buttonText = "Check Price", dark = false }: { buttonText?: st
             setError("");
           }}
           onKeyDown={(e) => e.key === "Enter" && submit()}
-          className={`h-14 rounded-xl border-2 pl-12 text-left text-lg focus-visible:ring-primary ${dark ? "bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground placeholder:text-primary-foreground/60": ""}`}
+          className={`h-14 min-w-0 rounded-xl border-2 pl-10 pr-1 text-left text-[0.93rem] focus-visible:ring-primary sm:pl-12 sm:pr-3 sm:text-lg ${dark ? "bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground placeholder:text-primary-foreground/60": ""}`}
         />
       </div>
       <Button
         onClick={submit}
         size="lg"
-        className={`h-14 px-8 text-lg rounded-xl font-semibold whitespace-nowrap ${dark ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90": ""}`}
+        className={`h-14 min-w-[7.75rem] rounded-xl px-3 text-base font-semibold whitespace-nowrap sm:min-w-0 sm:px-8 sm:text-lg ${dark ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90": ""}`}
       >
         {buttonText} <ArrowRight className="w-5 h-5 ml-1" />
       </Button>
-      {error && <p className={`text-sm ${dark ? "text-primary-foreground/80": "text-destructive"} sm:absolute sm:bottom-[-1.5rem]`}>{error}</p>}
+      {error && <p className={`absolute bottom-[-1.4rem] left-0 text-sm ${dark ? "text-primary-foreground/80": "text-destructive"}`}>{error}</p>}
     </div>
   );
 };
@@ -88,62 +88,90 @@ const HERO_BENEFITS = [
 /* ─── Hero ─── */
 const Hero = ({ heading }: { heading?: string }) => {
   const primaryHeading = (heading || "Junk Removal in Atlanta").replace(/\s+You Can Book Online$/i, "");
+  const mobileHeading = primaryHeading.match(/^(Junk Removal)(\s+in\s+.+)$/i);
 
   return (
     <section className="relative overflow-hidden bg-background">
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <Suspense fallback={null}>
-          <AnimatedHeroBackground className="w-full h-full" opacity={0.09} />
+          <AnimatedHeroBackground className="hidden h-full w-full lg:block" opacity={0.045} />
         </Suspense>
+
+        <motion.div
+          className="absolute -right-44 top-44 h-[29rem] w-[29rem] rounded-full bg-primary/[0.045] sm:-right-36 sm:top-32 sm:h-[34rem] sm:w-[34rem]"
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <div className="absolute inset-[23%] rounded-full border border-primary/10" />
+          <div className="absolute inset-[34%] rounded-full border border-primary/10" />
+        </motion.div>
+
+        <div className="absolute right-5 top-8 grid grid-cols-4 gap-3 sm:right-10 sm:top-12">
+          {Array.from({ length: 16 }).map((_, index) => (
+            <span key={index} className="h-1.5 w-1.5 rounded-full bg-primary/15" />
+          ))}
+        </div>
       </div>
 
-      <div className="relative z-10 mx-auto max-w-5xl px-5 pb-12 pt-12 sm:px-6 sm:pb-20 sm:pt-20">
+      <div className="relative z-10 mx-auto max-w-5xl px-8 pb-12 pt-[5.75rem] sm:px-6 sm:pb-20 sm:pt-20">
         <div className="max-w-4xl">
-          <p className="mb-5 inline-flex rounded-full bg-primary/10 px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.14em] text-primary sm:text-xs">
-            Fast Reliable Hassle-Free
-          </p>
-          <h1 className="max-w-4xl text-[2.7rem] font-bold leading-[1.04] tracking-[-0.045em] text-foreground sm:text-6xl lg:text-7xl">
-            <span className="block">{primaryHeading}</span>
-            <span className="mt-1 block text-primary sm:mt-2">You Can Book Online</span>
+          <div className="absolute left-0 top-[5.4rem] h-14 w-8 sm:hidden" aria-hidden="true">
+            <span className="absolute left-0 top-7 h-[3px] w-5 rotate-[17deg] rounded-full bg-primary" />
+            <span className="absolute left-1 top-3 h-[3px] w-6 rotate-[48deg] rounded-full bg-primary" />
+            <span className="absolute left-4 top-0 h-[3px] w-6 rotate-[73deg] rounded-full bg-primary" />
+          </div>
+          <h1 className="max-w-4xl text-[2.55rem] font-bold leading-[1.02] tracking-[-0.045em] text-foreground sm:text-6xl sm:leading-[1.04] lg:text-7xl">
+            {mobileHeading ? (
+              <>
+                <span className="block sm:hidden">{mobileHeading[1]}</span>
+                <span className="block sm:hidden">{mobileHeading[2].trim()}</span>
+                <span className="hidden sm:block">{primaryHeading}</span>
+              </>
+            ) : (
+              <span className="block">{primaryHeading}</span>
+            )}
+            <span className="mt-2 block text-primary sm:hidden">You Can Book</span>
+            <span className="block text-primary sm:hidden">Online</span>
+            <span className="mt-2 hidden text-primary sm:block">You Can Book Online</span>
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+          <p className="mt-6 max-w-2xl text-[1.08rem] leading-[1.65] text-muted-foreground sm:text-xl sm:leading-relaxed">
             Get instant upfront pricing with same-day junk removal for furniture, appliances, and full cleanouts.
           </p>
         </div>
 
-        <div className="mt-8 grid grid-cols-3 gap-2 sm:mt-10 sm:max-w-3xl sm:gap-6">
+        <div className="-mx-3 mt-7 grid grid-cols-3 gap-0 sm:mx-0 sm:mt-10 sm:max-w-3xl sm:gap-6">
           {HERO_BENEFITS.map((benefit, index) => (
             <div
               key={benefit.title}
-              className={`flex min-w-0 flex-col items-center text-center sm:flex-row sm:items-center sm:text-left ${
-                index > 0 ? "border-l border-border pl-2 sm:pl-6" : ""
+              className={`flex min-w-0 flex-col items-center px-1 text-center sm:flex-row sm:items-center sm:px-0 sm:text-left ${
+                index > 0 ? "border-l border-border sm:pl-6" : ""
               }`}
             >
               <span className="mb-2 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary sm:mb-0 sm:mr-4 sm:h-14 sm:w-14">
                 <benefit.icon className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={2.4} aria-hidden="true" />
               </span>
               <span className="min-w-0">
-                <span className="block text-[0.72rem] font-bold leading-tight text-foreground sm:text-base">{benefit.title}</span>
-                <span className="mt-1 block text-[0.65rem] leading-tight text-muted-foreground sm:text-sm">{benefit.detail}</span>
+                <span className="block text-[0.7rem] font-bold leading-tight text-foreground sm:text-base">{benefit.title}</span>
+                <span className="mt-1 block text-[0.62rem] leading-tight text-muted-foreground sm:text-sm">{benefit.detail}</span>
               </span>
             </div>
           ))}
         </div>
 
-        <div className="mt-9 max-w-4xl rounded-2xl border border-border bg-card/95 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.12)] backdrop-blur-sm sm:mt-10 sm:p-7">
-          <div className="mb-5 flex items-start gap-3 sm:items-center">
+        <div className="-mx-2 mt-4 max-w-4xl rounded-2xl border border-border bg-card p-4 shadow-[0_18px_50px_rgba(15,23,42,0.12)] sm:mx-0 sm:mt-10 sm:p-7">
+          <div className="mb-4 flex items-start gap-3 sm:mb-5 sm:items-center">
             <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
               <MapPin className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
-              <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">See Your Price in Seconds</h2>
-              <p className="mt-1 text-sm text-muted-foreground sm:text-base">Enter your ZIP code for instant upfront pricing</p>
+              <h2 className="text-[1.15rem] font-bold tracking-tight text-foreground sm:text-2xl">See Your Price in Seconds</h2>
+              <p className="mt-1 whitespace-nowrap text-xs leading-snug text-muted-foreground sm:text-base">Enter your ZIP code for instant upfront pricing</p>
             </div>
           </div>
           <ZipForm />
         </div>
 
-        <div className="mt-5 grid max-w-4xl grid-cols-3 divide-x divide-border text-center text-[0.68rem] text-muted-foreground sm:text-sm">
+        <div className="-mx-3 mt-5 grid max-w-4xl grid-cols-3 divide-x divide-border text-center text-[0.64rem] text-muted-foreground sm:mx-0 sm:text-sm">
           {["Takes 30 seconds", "No obligation", "100% free quote"].map((item) => (
             <span key={item} className="flex items-center justify-center gap-1.5 px-1 sm:gap-2 sm:px-3">
               <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-primary sm:h-5 sm:w-5" aria-hidden="true" />
