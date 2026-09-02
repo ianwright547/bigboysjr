@@ -139,7 +139,20 @@ const Hero = ({ heading }: { heading?: string }) => {
           </p>
         </div>
 
-        <div className="-mx-3 mt-7 grid grid-cols-3 gap-0 sm:mx-0 sm:mt-10 sm:max-w-3xl sm:gap-6">
+        <div className="-mx-2 mt-7 max-w-4xl rounded-2xl border border-border bg-card p-4 shadow-[0_18px_50px_rgba(15,23,42,0.12)] sm:mx-0 sm:mt-10 sm:p-7">
+          <div className="mb-4 flex items-start gap-3 sm:mb-5 sm:items-center">
+            <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <MapPin className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <div>
+              <h2 className="text-[1.15rem] font-bold tracking-tight text-foreground sm:text-2xl">See Your Price in Seconds</h2>
+              <p className="mt-1 whitespace-nowrap text-xs leading-snug text-muted-foreground sm:text-base">Enter your ZIP code for instant upfront pricing</p>
+            </div>
+          </div>
+          <ZipForm />
+        </div>
+
+        <div className="-mx-3 mt-7 grid grid-cols-3 gap-0 sm:mx-0 sm:mt-9 sm:max-w-3xl sm:gap-6">
           {HERO_BENEFITS.map((benefit, index) => (
             <div
               key={benefit.title}
@@ -156,19 +169,6 @@ const Hero = ({ heading }: { heading?: string }) => {
               </span>
             </div>
           ))}
-        </div>
-
-        <div className="-mx-2 mt-4 max-w-4xl rounded-2xl border border-border bg-card p-4 shadow-[0_18px_50px_rgba(15,23,42,0.12)] sm:mx-0 sm:mt-10 sm:p-7">
-          <div className="mb-4 flex items-start gap-3 sm:mb-5 sm:items-center">
-            <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <MapPin className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <div>
-              <h2 className="text-[1.15rem] font-bold tracking-tight text-foreground sm:text-2xl">See Your Price in Seconds</h2>
-              <p className="mt-1 whitespace-nowrap text-xs leading-snug text-muted-foreground sm:text-base">Enter your ZIP code for instant upfront pricing</p>
-            </div>
-          </div>
-          <ZipForm />
         </div>
 
         <div className="-mx-3 mt-5 grid max-w-4xl grid-cols-3 divide-x divide-border text-center text-[0.64rem] text-muted-foreground sm:mx-0 sm:text-sm">
