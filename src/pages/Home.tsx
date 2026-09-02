@@ -17,7 +17,6 @@ import {
   Zap,
   ChevronDown,
 } from "lucide-react";
-import heroIsometric from "@/assets/hero-isometric.avif";
 import truckImg from "@/assets/hero-truck.avif";
 import houseImg from "@/assets/house-cleanout.avif";
 import haulerImg from "@/assets/junk-hauler.avif";
@@ -50,21 +49,24 @@ const ZipForm = ({ buttonText = "Check Price", dark = false }: { buttonText?: st
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
-      <Input
-        type="text"
-        inputMode="numeric"
-        placeholder="Enter ZIP code"
-        aria-label="ZIP code"
-        maxLength={5}
-        value={zip}
-        onChange={(e) => {
-          setZip(e.target.value.replace(/\D/g, ""));
-          setError("");
-        }}
-        onKeyDown={(e) => e.key === "Enter" && submit()}
-        className={`h-14 text-lg rounded-xl border-2 text-center sm:text-left sm:flex-1 focus-visible:ring-primary ${dark ? "bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground placeholder:text-primary-foreground/60": ""}`}
-      />
+    <div className="relative flex w-full max-w-2xl flex-col gap-3 sm:flex-row">
+      <div className="relative flex-1">
+        <MapPin className={`pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 ${dark ? "text-primary-foreground/70" : "text-muted-foreground"}`} aria-hidden="true" />
+        <Input
+          type="text"
+          inputMode="numeric"
+          placeholder="Enter ZIP code"
+          aria-label="ZIP code"
+          maxLength={5}
+          value={zip}
+          onChange={(e) => {
+            setZip(e.target.value.replace(/\D/g, ""));
+            setError("");
+          }}
+          onKeyDown={(e) => e.key === "Enter" && submit()}
+          className={`h-14 rounded-xl border-2 pl-12 text-left text-lg focus-visible:ring-primary ${dark ? "bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground placeholder:text-primary-foreground/60": ""}`}
+        />
+      </div>
       <Button
         onClick={submit}
         size="lg"
@@ -77,48 +79,82 @@ const ZipForm = ({ buttonText = "Check Price", dark = false }: { buttonText?: st
   );
 };
 
+const HERO_BENEFITS = [
+  { icon: Zap, title: "Instant Pricing", detail: "No hidden fees" },
+  { icon: Clock, title: "Same-Day Service", detail: "Fast and reliable" },
+  { icon: ShieldCheck, title: "No Obligation", detail: "A free 30-second quote" },
+];
+
 /* ─── Hero ─── */
-const Hero = ({ heading }: { heading?: string }) => (
-  <section className="relative overflow-hidden bg-background">
-    <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-      <Suspense fallback={null}>
-        <AnimatedHeroBackground className="w-full h-full" opacity={0.14} />
-      </Suspense>
-    </div>
-    <div className="relative z-10 max-w-6xl mx-auto px-4 pt-16 pb-12 sm:pt-24 sm:pb-20 flex flex-col lg:flex-row items-center gap-10">
-      <div className="flex-1 text-center lg:text-left">
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight leading-tight mb-4">
-          {heading || (
-            <>
-              Junk Removal in Atlanta{" "}
-              <span className="text-primary">You Can Book Online</span>
-            </>
-          )}
-        </h1>
-        <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0">
-          Get instant upfront pricing with same-day junk removal for furniture, appliances, and full cleanouts. No hidden fees. No waiting for quotes.
-        </p>
-        <div className="flex flex-col items-center lg:items-start gap-3">
+const Hero = ({ heading }: { heading?: string }) => {
+  const primaryHeading = (heading || "Junk Removal in Atlanta").replace(/\s+You Can Book Online$/i, "");
+
+  return (
+    <section className="relative overflow-hidden bg-background">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <Suspense fallback={null}>
+          <AnimatedHeroBackground className="w-full h-full" opacity={0.09} />
+        </Suspense>
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-5xl px-5 pb-12 pt-12 sm:px-6 sm:pb-20 sm:pt-20">
+        <div className="max-w-4xl">
+          <p className="mb-5 inline-flex rounded-full bg-primary/10 px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.14em] text-primary sm:text-xs">
+            Fast Reliable Hassle-Free
+          </p>
+          <h1 className="max-w-4xl text-[2.7rem] font-bold leading-[1.04] tracking-[-0.045em] text-foreground sm:text-6xl lg:text-7xl">
+            <span className="block">{primaryHeading}</span>
+            <span className="mt-1 block text-primary sm:mt-2">You Can Book Online</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+            Get instant upfront pricing with same-day junk removal for furniture, appliances, and full cleanouts.
+          </p>
+        </div>
+
+        <div className="mt-8 grid grid-cols-3 gap-2 sm:mt-10 sm:max-w-3xl sm:gap-6">
+          {HERO_BENEFITS.map((benefit, index) => (
+            <div
+              key={benefit.title}
+              className={`flex min-w-0 flex-col items-center text-center sm:flex-row sm:items-center sm:text-left ${
+                index > 0 ? "border-l border-border pl-2 sm:pl-6" : ""
+              }`}
+            >
+              <span className="mb-2 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary sm:mb-0 sm:mr-4 sm:h-14 sm:w-14">
+                <benefit.icon className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={2.4} aria-hidden="true" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[0.72rem] font-bold leading-tight text-foreground sm:text-base">{benefit.title}</span>
+                <span className="mt-1 block text-[0.65rem] leading-tight text-muted-foreground sm:text-sm">{benefit.detail}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-9 max-w-4xl rounded-2xl border border-border bg-card/95 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.12)] backdrop-blur-sm sm:mt-10 sm:p-7">
+          <div className="mb-5 flex items-start gap-3 sm:items-center">
+            <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <MapPin className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <div>
+              <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">See Your Price in Seconds</h2>
+              <p className="mt-1 text-sm text-muted-foreground sm:text-base">Enter your ZIP code for instant upfront pricing</p>
+            </div>
+          </div>
           <ZipForm />
-          <p className="text-sm text-muted-foreground">Takes 30 seconds • No obligation</p>
+        </div>
+
+        <div className="mt-5 grid max-w-4xl grid-cols-3 divide-x divide-border text-center text-[0.68rem] text-muted-foreground sm:text-sm">
+          {["Takes 30 seconds", "No obligation", "100% free quote"].map((item) => (
+            <span key={item} className="flex items-center justify-center gap-1.5 px-1 sm:gap-2 sm:px-3">
+              <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-primary sm:h-5 sm:w-5" aria-hidden="true" />
+              {item}
+            </span>
+          ))}
         </div>
       </div>
-      <div className="flex-1 max-w-md lg:max-w-lg">
-        <img
-          src={heroIsometric}
-          alt="3D illustration of junk removal service with furniture and appliances"
-          width={1330}
-          height={1321}
-          loading="eager"
-          // @ts-expect-error fetchpriority is a valid HTML attribute, React types lag behind
-          fetchpriority="high"
-          decoding="async"
-          className="w-full h-auto rounded-2xl"
-        />
-      </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 /* ─── Live Agent CTA ─── */
 const LiveAgentSection = () => {
