@@ -8,10 +8,11 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Minus, Trash2, Search, Save, Loader2 } from "lucide-react";
-import { DEFAULT_ITEMS } from "@/context/FunnelContext";
+import { Plus, Minus, Trash2, Search, Save, Loader2, RefreshCw } from "lucide-react";
+import { DEFAULT_ITEMS, ADDON_UNIT_PRICES, AREA_SERVICE_FEE } from "@/context/FunnelContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
 
 type LineItem = {
   id: string;
@@ -52,8 +53,20 @@ interface Props {
   mode?: "edit" | "create";
 }
 
-const ADDON_PRICES = { stairs: 10, disassembly: 20, sameDay: 20 };
-const AREA_SERVICE_FEE = 49;
+const ADDON_PRICES = ADDON_UNIT_PRICES;
+
+// Load size tiers — must stay in sync with the customer funnel (StepLoadSize)
+const LOAD_LEVELS = [
+  { fraction: 1, label: "1/8 Load (~2 cu yd)", price: 99 },
+  { fraction: 2, label: "2/8 Load (~4 cu yd)", price: 199 },
+  { fraction: 3, label: "3/8 Load (~6 cu yd)", price: 250 },
+  { fraction: 4, label: "4/8 Load (~8 cu yd)", price: 379 },
+  { fraction: 5, label: "5/8 Load (~10 cu yd)", price: 450 },
+  { fraction: 6, label: "6/8 Load (~12 cu yd)", price: 499 },
+  { fraction: 7, label: "7/8 Load (~14 cu yd)", price: 599 },
+  { fraction: 8, label: "Full Load (~16 cu yd)", price: 649 },
+];
+
 
 // Read add-ons from a lead row, supporting both new (number/sameDay) and legacy (boolean stairs/heavy/disassembly) shapes.
 const parseAddOns = (raw: any): AddOnsState => {
@@ -88,6 +101,24 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
   const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [catalog, setCatalog] = useState<{ id: string; name: string; price: number; icon: string; category: string }[]>(
+    DEFAULT_ITEMS.map((i) => ({ id: i.id, name: i.name, price: i.price, icon: i.icon, category: i.category }))
+  );
+
+  // Load the live catalog so prices always match what customers see
+  useEffect(() => {
+    if (!open) return;
+    (async () => {
+      const { data } = await supabase
+        .from("catalog_items")
+        .select("id, name, price, icon, category")
+        .eq("active", true)
+        .order("sort_order", { ascending: true });
+      if (data && data.length) {
+        setCatalog(data.map((d) => ({ ...d, price: Number(d.price) })));
+      }
+    })();
+  }, [open]);
 
   // Reset state when lead changes
   useEffect(() => {
@@ -108,17 +139,26 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
     setSearch("");
   }, [lead.id]);
 
+  const itemsSubtotal = useMemo(
+    () => items.reduce((s, i) => s + (Number(i.price) || 0) * (Number(i.quantity) || 0), 0),
+    [items]
+  );
+
+  const addOnsSubtotal = useMemo(
+    () =>
+      (Number(addOns.stairs) || 0) * ADDON_PRICES.stairs +
+      (Number(addOns.disassembly) || 0) * ADDON_PRICES.disassembly +
+      (addOns.sameDay ? ADDON_PRICES.sameDay : 0),
+    [addOns]
+  );
+
+  const baseSubtotal = pricingMethod === "load" ? loadSize?.price || 0 : itemsSubtotal;
+
   // Auto-recalc total unless overridden
-  const calculatedTotal = useMemo(() => {
-    let t = 0;
-    if (pricingMethod === "load" && loadSize) t = loadSize.price || 0;
-    else t = items.reduce((s, i) => s + (Number(i.price) || 0) * (Number(i.quantity) || 0), 0);
-    t += (Number(addOns.stairs) || 0) * ADDON_PRICES.stairs;
-    t += (Number(addOns.disassembly) || 0) * ADDON_PRICES.disassembly;
-    if (addOns.sameDay) t += ADDON_PRICES.sameDay;
-    t += AREA_SERVICE_FEE;
-    return t;
-  }, [pricingMethod, loadSize, items, addOns]);
+  const calculatedTotal = useMemo(
+    () => baseSubtotal + addOnsSubtotal + AREA_SERVICE_FEE,
+    [baseSubtotal, addOnsSubtotal]
+  );
 
   useEffect(() => {
     if (!overrideTotal) setTotalPrice(String(calculatedTotal));
@@ -127,10 +167,35 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
   const filteredCatalog = useMemo(() => {
     if (!search.trim()) return [];
     const q = search.toLowerCase();
-    return DEFAULT_ITEMS.filter((i) => i.name.toLowerCase().includes(q) || i.category.toLowerCase().includes(q)).slice(0, 8);
-  }, [search]);
+    return catalog
+      .filter((i) => i.name.toLowerCase().includes(q) || (i.category || "").toLowerCase().includes(q))
+      .slice(0, 8);
+  }, [search, catalog]);
 
-  const addItemFromCatalog = (catalogItem: typeof DEFAULT_ITEMS[number]) => {
+  // Items whose saved price differs from the current catalog price
+  const stalePriceCount = useMemo(
+    () =>
+      items.filter((i) => {
+        const c = catalog.find((c) => c.id === i.id);
+        return c && Number(c.price) !== Number(i.price);
+      }).length,
+    [items, catalog]
+  );
+
+  const syncCatalogPrices = () => {
+    setItems((prev) =>
+      prev.map((i) => {
+        const c = catalog.find((c) => c.id === i.id);
+        return c ? { ...i, price: Number(c.price), name: c.name } : i;
+      })
+    );
+    setOverrideTotal(false);
+    toast.success("Item prices updated to current catalog");
+  };
+
+
+
+  const addItemFromCatalog = (catalogItem: { id: string; name: string; price: number; icon: string; category: string }) => {
     const existing = items.find((i) => i.id === catalogItem.id);
     if (existing) {
       setItems(items.map((i) => (i.id === catalogItem.id ? { ...i, quantity: i.quantity + 1 } : i)));
@@ -157,15 +222,15 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
   // Summary of changes for confirmation dialog
   const changes = useMemo(() => {
     const list: string[] = [];
-    if (name.trim() !== lead.name) list.push(`Name: "${lead.name}" → "${name.trim()}"`);
-    if (phone.trim() !== lead.phone) list.push(`Phone: "${lead.phone}" → "${phone.trim()}"`);
-    if ((email.trim() || null) !== (lead.email || null)) list.push(`Email: "${lead.email || "—"}" → "${email.trim() || "—"}"`);
+    if (name.trim() !== lead.name) list.push(`Name: "${lead.name}" to "${name.trim()}"`);
+    if (phone.trim() !== lead.phone) list.push(`Phone: "${lead.phone}" to "${phone.trim()}"`);
+    if ((email.trim() || null) !== (lead.email || null)) list.push(`Email: "${lead.email || "Not set"}" to "${email.trim() || "Not set"}"`);
     if ((address.trim() || null) !== (lead.address || null)) list.push(`Address changed`);
-    if ((zip.trim() || null) !== (lead.zip_code || null)) list.push(`ZIP: "${lead.zip_code || "—"}" → "${zip.trim() || "—"}"`);
-    if (pricingMethod !== (lead.pricing_method || "items")) list.push(`Pricing method: ${lead.pricing_method || "items"} → ${pricingMethod}`);
+    if ((zip.trim() || null) !== (lead.zip_code || null)) list.push(`ZIP: "${lead.zip_code || "Not set"}" to "${zip.trim() || "Not set"}"`);
+    if (pricingMethod !== (lead.pricing_method || "items")) list.push(`Pricing method: ${lead.pricing_method || "items"} to ${pricingMethod}`);
     const origItems = Array.isArray(lead.selected_items) ? (lead.selected_items as LineItem[]) : [];
     if (pricingMethod === "items" && JSON.stringify(items) !== JSON.stringify(origItems)) {
-      list.push(`Items updated (${origItems.length} → ${items.length})`);
+      list.push(`Items updated (${origItems.length} to ${items.length})`);
     }
     if (pricingMethod === "load" && JSON.stringify(loadSize) !== JSON.stringify(lead.load_size)) {
       list.push(`Load size updated`);
@@ -173,9 +238,9 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
     const origAddOns = parseAddOns(lead.add_ons);
     if (JSON.stringify(addOns) !== JSON.stringify(origAddOns)) list.push(`Add-ons changed`);
     const newTotal = totalPrice === "" ? null : Number(totalPrice);
-    if (newTotal !== lead.total_price) list.push(`Total: $${lead.total_price ?? "—"} → $${newTotal ?? "—"}`);
-    if ((bookingDate || null) !== (lead.booking_date || null)) list.push(`Date: ${lead.booking_date || "—"} → ${bookingDate || "—"}`);
-    if ((timeSlot || null) !== (lead.time_slot || null)) list.push(`Time slot: ${lead.time_slot || "—"} → ${timeSlot || "—"}`);
+    if (newTotal !== lead.total_price) list.push(`Total: $${lead.total_price ?? "Not set"} to $${newTotal ?? "Not set"}`);
+    if ((bookingDate || null) !== (lead.booking_date || null)) list.push(`Date: ${lead.booking_date || "Not set"} to ${bookingDate || "Not set"}`);
+    if ((timeSlot || null) !== (lead.time_slot || null)) list.push(`Time slot: ${lead.time_slot || "Not set"} to ${timeSlot || "Not set"}`);
     if ((notes.trim() || null) !== (lead.message || null)) list.push(`Notes changed`);
     return list;
   }, [name, phone, email, address, zip, pricingMethod, items, loadSize, addOns, totalPrice, bookingDate, timeSlot, notes, lead]);
@@ -243,7 +308,7 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{isCreate ? "New Order" : `Edit Order — ${lead.name}`}</DialogTitle>
+          <DialogTitle>{isCreate ? "New Order" : `Edit Order: ${lead.name}`}</DialogTitle>
         </DialogHeader>
 
 
@@ -290,12 +355,20 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
           {/* Items */}
           {pricingMethod === "items" && (
             <section className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <h3 className="text-sm font-semibold text-foreground">Items ({items.length})</h3>
-                <Button size="sm" variant="outline" onClick={addCustomItem} className="h-8 text-xs">
-                  <Plus className="w-3 h-3 mr-1" /> Custom
-                </Button>
+                <div className="flex items-center gap-2">
+                  {stalePriceCount > 0 && (
+                    <Button size="sm" variant="secondary" onClick={syncCatalogPrices} className="h-8 text-xs">
+                      <RefreshCw className="w-3 h-3 mr-1" /> Update {stalePriceCount} price{stalePriceCount === 1 ? "" : "s"}
+                    </Button>
+                  )}
+                  <Button size="sm" variant="outline" onClick={addCustomItem} className="h-8 text-xs">
+                    <Plus className="w-3 h-3 mr-1" /> Custom
+                  </Button>
+                </div>
               </div>
+
 
               {/* Search catalog */}
               <div className="relative">
@@ -375,23 +448,32 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
           {pricingMethod === "load" && (
             <section className="space-y-3">
               <h3 className="text-sm font-semibold text-foreground">Load Size</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label className="text-xs">Size ID</Label>
-                  <Input
-                    value={loadSize?.id || ""}
-                    onChange={(e) => setLoadSize({ ...(loadSize || { price: 0 }), id: e.target.value })}
-                    placeholder="e.g. 1/4, 1/2, full"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs">Price ($)</Label>
-                  <Input
-                    type="number"
-                    value={loadSize?.price ?? ""}
-                    onChange={(e) => setLoadSize({ ...(loadSize || { id: "" }), price: Number(e.target.value) || 0 })}
-                  />
-                </div>
+              <Select
+                value={loadSize?.fraction ? String(loadSize.fraction) : ""}
+                onValueChange={(v) => {
+                  const level = LOAD_LEVELS.find((l) => String(l.fraction) === v)!;
+                  setLoadSize({ id: `load-${level.fraction}`, fraction: level.fraction, price: level.price });
+                  setOverrideTotal(false);
+                }}
+              >
+                <SelectTrigger><SelectValue placeholder="Select load size" /></SelectTrigger>
+                <SelectContent>
+                  {LOAD_LEVELS.map((l) => (
+                    <SelectItem key={l.fraction} value={String(l.fraction)}>
+                      {l.label}: ${l.price}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div>
+                <Label className="text-xs">Load price ($): adjust only if quoting a custom load</Label>
+                <Input
+                  type="number"
+                  value={loadSize?.price ?? ""}
+                  onChange={(e) =>
+                    setLoadSize({ ...(loadSize || { id: "load-custom" }), price: Number(e.target.value) || 0 })
+                  }
+                />
               </div>
             </section>
           )}
@@ -408,7 +490,7 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
                 return (
                   <div key={key} className="flex items-center justify-between p-2 bg-muted/50 rounded-lg gap-2">
                     <span className="text-sm">
-                      {label} <span className="text-xs text-muted-foreground">($10 / {unit})</span>
+                      {label} <span className="text-xs text-muted-foreground">(${ADDON_PRICES[key]} / {unit})</span>
                     </span>
                     <div className="flex items-center gap-2">
                       <Button
@@ -442,11 +524,13 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
                 );
               })}
               <div className="flex items-center justify-between p-2 bg-muted/50 rounded-lg">
-                <span className="text-sm">Same Day Service <span className="text-xs text-muted-foreground">(+$10)</span></span>
+                <span className="text-sm">Same Day Service <span className="text-xs text-muted-foreground">(+${ADDON_PRICES.sameDay})</span></span>
                 <Switch checked={addOns.sameDay} onCheckedChange={(v) => setAddOns({ ...addOns, sameDay: v })} />
               </div>
             </div>
           </section>
+
+
 
           {/* Booking */}
           <section className="space-y-3">
@@ -477,6 +561,21 @@ const EditLeadModal = ({ lead, open, onClose, onSaved, mode = "edit" }: Props) =
               <h3 className="text-sm font-semibold text-foreground">Total Price</h3>
               <Badge variant="outline" className="text-xs">Auto: ${calculatedTotal}</Badge>
             </div>
+            <div className="space-y-1 text-xs text-muted-foreground border-b border-border/60 pb-2">
+              <div className="flex justify-between">
+                <span>{pricingMethod === "load" ? "Load size" : `Items (${items.length})`}</span>
+                <span>${baseSubtotal}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Add-ons</span>
+                <span>${addOnsSubtotal}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Area service fee</span>
+                <span>${AREA_SERVICE_FEE}</span>
+              </div>
+            </div>
+
             <div className="flex items-center gap-2">
               <span className="text-lg font-bold">$</span>
               <Input

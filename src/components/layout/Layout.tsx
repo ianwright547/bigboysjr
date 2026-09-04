@@ -3,8 +3,12 @@ import Header from "./Header";
 import Footer from "./Footer";
 import PreferredSourceButton from "@/components/PreferredSourceButton";
 import { CITIES } from "@/data/cities";
+import { usePageTracking } from "@/hooks/usePageTracking";
+import { useWebVitals } from "@/hooks/useWebVitals";
 
 const Layout = () => {
+  usePageTracking();
+  useWebVitals();
   const { pathname } = useLocation();
   const hidePreferredSource = ["/admin", "/book", "/reset-password", "/unsubscribe"].some(
     (path) => pathname.startsWith(path),
