@@ -11,6 +11,7 @@ import StepBooking from "@/components/funnel/StepBooking";
 import StepConfirmation from "@/components/funnel/StepConfirmation";
 import { AnimatePresence } from "framer-motion";
 import Seo from "@/components/Seo";
+import GoogleAdsTag from "@/components/GoogleAdsTag";
 
 const AnimatedHeroBackground = lazy(() => import("@/components/AnimatedHeroBackground"));
 
@@ -62,6 +63,7 @@ const FunnelContent = () => {
 
 const Book = () => (
   <FunnelProvider>
+    <GoogleAdsTag />
     <Seo
       title="Book Junk Removal Online | Instant Quote | Big Boys"
       description="Build an upfront junk removal estimate by item or load size, then request a pickup time from Big Boys in Metro Atlanta."

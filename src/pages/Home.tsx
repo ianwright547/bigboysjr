@@ -26,6 +26,7 @@ import { CITIES } from "@/data/cities";
 import { SERVICE_LINKS } from "@/data/services";
 import { JOB_PROJECTS } from "@/data/jobPhotos";
 import RealJobGallery from "@/components/RealJobGallery";
+import GoogleAdsTag from "@/components/GoogleAdsTag";
 
 const AnimatedHeroBackground = lazy(() => import("@/components/AnimatedHeroBackground"));
 
@@ -869,6 +870,7 @@ const Home = () => {
   const description = seo?.description || "Book same-day junk removal in Atlanta with upfront online pricing for furniture, appliances, cleanouts, yard debris, and commercial junk.";
 
   return <div className="scroll-smooth">
+    <GoogleAdsTag />
     <Seo
       title={title}
       description={description}
